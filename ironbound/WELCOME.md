@@ -61,9 +61,22 @@ Read `ironbound/SESSION.md` and check if `update.enabled` is true. If so:
 
 ## Step 2 — Desktop Shortcut (smart versioning)
 
-### Detect headless environment
+### Detect chat-web environment FIRST (skip everything below if detected)
 
-Before creating any shortcut, check if the environment has a desktop:
+If the agent is running inside a chat-web sandbox (Claude.ai web project, ChatGPT custom GPT, Anthropic Console, Gemini app upload), there is no desktop, no shell, no persistent filesystem the user can navigate to, and no concept of "double-click to relaunch." Creating a shortcut is meaningless and **claiming to have created one is a hallucination users will catch.**
+
+Detection — **any one of these classifies the environment as chat-web; skip Step 2 entirely**:
+
+1. **No agent CLI in the process tree.** Run `ps -o comm= -p $PPID` (or walk up the tree). If the parent is not `claude`, `gemini`, `codex`, or `opencode`, this is chat-web. The CLI agents are the only legitimate parents for a real desktop session.
+2. **No agent binary on PATH.** Run `which claude gemini codex opencode 2>/dev/null`. If all four return empty, this is chat-web.
+3. **Sandbox markers.** Presence of `/.dockerenv` combined with absence of `~/.bashrc` AND absence of `~/.zshrc` is a strong chat-web signal.
+4. **Bash availability.** If `bash` itself returns "command not found" or shell tools are tightly restricted, this is chat-web — even if a filesystem appears writable, the desktop-shortcut commands cannot run.
+
+If chat-web is detected, **immediately skip to Step 7 with the chat-web greeting** (see Step 7 below). Do not mention "shortcut," "desktop," "next time," "double-click," or any phrasing that implies the user can re-launch from outside the chat. The user reaches the app via this conversation; there is no separate launcher.
+
+### Detect headless desktop environment
+
+Only run this check if Step 2's chat-web detection returned negative.
 
 ```bash
 # macOS — check if Desktop directory exists and has contents
@@ -76,7 +89,7 @@ echo "${DISPLAY}${WAYLAND_DISPLAY}"
 - **Linux**: If both `$DISPLAY` and `$WAYLAND_DISPLAY` are empty, skip shortcut creation entirely.
 - **Windows**: Always attempt (Windows always has a desktop).
 
-If headless, skip to Step 8 (greet without mentioning the shortcut).
+If headless, skip to Step 7 (greet without mentioning the shortcut).
 
 ### Detect the agent CLI
 
@@ -363,13 +376,18 @@ No step needed here — handled in real time during the session (see IDENTITY.md
 
 The greeting depends on what happened with the shortcut:
 
-**First creation (shortcut was just created for the first time):**
+**Chat-web environment (Claude.ai, ChatGPT, Anthropic Console, etc.):**
+> **ToneAI**: What song or artist are we dialling in?
+
+Do NOT mention "shortcut," "desktop," "next time," or "double-click" in chat-web. The user has no desktop and no re-launch path; saying you put a shortcut on their desktop is a hallucination they will (correctly) call out.
+
+**First creation (shortcut was just created for the first time, CLI environment with desktop):**
 > **ToneAI**: I put a **ToneAI** shortcut on your desktop — next time just double-click it. What song or artist are we dialling in?
 
 **Shortcut already matched (skipped) or rebuilt silently or headless environment:**
 > **ToneAI**: What song or artist are we dialling in?
 
-Only mention the shortcut when it is newly created for the first time.
+Only mention the shortcut when it is **newly created for the first time AND** the environment is a CLI agent on a real desktop OS. When in doubt, default to the no-shortcut greeting.
 
 ## Step 8 — After generating a QR preset
 
