@@ -12,7 +12,8 @@
 set -e
 
 REPO="steve-krisjanovs/toneai-nux-qr-ironbound"
-WIZARD_URL="https://github.com/${REPO}/releases/latest/download/toneai-setup.ts"
+CDN="https://cdn.jsdelivr.net/gh/${REPO}@latest"
+WIZARD_URL="${CDN}/setup/src/index.ts"
 WIZARD_DIR="${HOME}/.toneai-setup"
 WIZARD_PATH="${WIZARD_DIR}/wizard.ts"
 
