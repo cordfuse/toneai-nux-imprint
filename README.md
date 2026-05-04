@@ -8,46 +8,31 @@ It runs inside your existing AI account — Claude, Gemini, or OpenAI. No API ke
 
 ## Getting started
 
-Three install paths — pick the one that fits.
+Two ZIPs on every release — pick the right one:
 
-### Setup wizard (recommended for non-developers)
+| | Desktop | Mobile |
+|---|---|---|
+| **File** | `*-desktop-v*.zip` | `*-v*.zip` |
+| **Size** | Small | ~27MB |
+| **For** | CLI agents on your machine | Claude.ai, ChatGPT web upload |
+| **Node modules** | Installed on first launch | Bundled |
 
-| Platform | Install |
-|---|---|
-| **Windows** | Download and run `toneai-setup.exe` from [Releases](../../releases) |
-| **macOS** | `brew tap steve-krisjanovs/tools && brew install toneai-setup && toneai-setup` |
-| **Linux (Debian/Ubuntu)** | `sudo dpkg -i toneai-setup_*_amd64.deb` |
-| **Linux (Fedora/RHEL)** | `sudo rpm -i toneai-setup-*-1.x86_64.rpm` |
-
-The wizard handles agent install, project location, and first-launch defaults. No terminal experience required after `toneai-setup` runs.
-
-### Single-prompt install for chat web (no download, no upload)
-
-For **Claude.ai**, **ChatGPT**, or **Gemini web**:
-
-1. Open [`toneai-web-install-v*.txt`](../../releases/latest) from the latest release
-2. Select all (Ctrl-A / Cmd-A), copy
-3. Paste into your chat client of choice
-4. Hit send. ToneAI is ready in that chat.
-
-One file, one paste, one send. No project setup, no ZIP upload required.
-
-### Desktop CLI (developers, lean download)
+**Desktop (CLI):**
 
 1. Download `*-desktop-v*.zip` from [Releases](../../releases)
 2. Extract it and open a terminal in that folder
 3. Run your agent CLI: `claude`, `gemini`, `codex`, or `opencode`
 4. Say hello — ToneAI handles the rest
 
-### Full bundle (mobile-compatible, ~27MB)
+**Mobile / web upload:**
 
-For Claude.ai / ChatGPT mobile **projects** where the single-prompt paste is too long for the input field:
-
-1. Download `*-v*.zip` (the larger one)
-2. Upload it as a project knowledge file
+1. Download `*-v*.zip` (the larger one) on your phone or computer
+2. Upload it to [claude.ai](https://claude.ai) or [ChatGPT](https://chat.openai.com)
 3. Prompt: *"Extract this ZIP. Read CLAUDE.md and follow its instructions. Say hello."* (use AGENTS.md for ChatGPT)
 
 On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
+
+> Gemini web is not supported — Gemini CLI only.
 
 ---
 

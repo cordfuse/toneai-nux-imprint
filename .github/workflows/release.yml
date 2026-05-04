@@ -71,12 +71,6 @@ jobs:
           name: product-zips
           path: '*-v*.zip'
 
-      - name: Upload web-install prompt as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: web-install-prompt
-          path: 'toneai-web-install-v*.txt'
-
   # ── Setup wizard binaries (Bun compile, 4 platforms) ─────────────────────
   build-setup-binaries:
     name: Build setup binary ${{ matrix.target }}
@@ -281,26 +275,13 @@ jobs:
 
             Run `toneai-setup` — the wizard handles the rest.
 
-            ### Path 2 — Single-prompt install for chat web (no download, no upload)
+            ### Path 2 — Manual ZIP (developers / chat clients)
 
-            **Claude.ai / ChatGPT / Gemini web** users:
+            **Desktop CLI (lean — runtime install):**
+            Download `toneai-nux-qr-ironbound-desktop-v${{ steps.version.outputs.VERSION }}.zip`, extract, run your agent CLI (`claude`, `gemini`, `codex`, `opencode`) in the folder, say hello.
 
-            1. Open `toneai-web-install-v${{ steps.version.outputs.VERSION }}.txt` (linked below)
-            2. Select all (Ctrl-A or Cmd-A), copy
-            3. Paste into Claude.ai, ChatGPT, or Gemini web
-            4. Hit send. ToneAI is ready in that chat.
-
-            One file, one paste, one send. No project setup, no ZIP upload.
-
-            ### Path 3 — Desktop CLI (developers, lean download)
-
-            **Local agent CLIs** (`claude`, `gemini`, `codex`, `opencode`):
-            Download `toneai-nux-qr-ironbound-desktop-v${{ steps.version.outputs.VERSION }}.zip`, extract, open the folder in your agent CLI, say hello.
-
-            ### Path 4 — Full bundle (mobile-compatible, ~27MB)
-
-            For Claude.ai / ChatGPT mobile **projects** (where Path 2's paste is too long for the input field on phone):
-            Download `toneai-nux-qr-ironbound-v${{ steps.version.outputs.VERSION }}.zip` and upload it as a project knowledge file.
+            **Mobile / Claude.ai / ChatGPT (full bundle, ~27MB):**
+            Download `toneai-nux-qr-ironbound-v${{ steps.version.outputs.VERSION }}.zip` and upload it to your chat client.
           files: release-assets/**/*
           draft: false
           prerelease: false
