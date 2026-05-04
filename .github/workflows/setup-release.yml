@@ -210,6 +210,13 @@ jobs:
           files: release-assets/**/*
           draft: false
           prerelease: false
+          # The toneai-setup release is a sibling product (the install wizard),
+          # NOT the main ToneAI app. README's "Releases" link assumes Latest is
+          # a v* tag with the product ZIPs (toneai-nux-qr-ironbound-*.zip and
+          # toneai-nux-qr-ironbound-desktop-*.zip). Without this flag, this
+          # workflow's release would claim Latest by date and bury the product
+          # ZIPs — exactly the bug Steve hit 2026-05-04. Keep make_latest=false.
+          make_latest: 'false'
 
   update-homebrew:
     name: Update Homebrew formula
