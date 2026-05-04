@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import { spawnSync } from "child_process";
 import { existsSync, mkdirSync, createWriteStream } from "fs";
-import { homedir, platform } from "os";
+import { homedir, platform, tmpdir } from "os";
 import { join } from "path";
 import * as readline from "readline";
 import * as https from "https";
@@ -29,6 +29,9 @@ const cyan = (s: string) => `${c.cyan}${s}${c.reset}`;
 const IS_WIN   = platform() === "win32";
 const IS_MAC   = platform() === "darwin";
 const IS_LINUX = platform() === "linux";
+
+const REPO    = "steve-krisjanovs/toneai-nux-qr-ironbound";
+const ZIP_URL = `https://github.com/${REPO}/releases/latest/download/toneai-source.zip`;
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
@@ -61,6 +64,10 @@ function downloadFile(url: string, dest: string): Promise<void> {
           request(res.headers.location!);
           return;
         }
+        if (res.statusCode !== 200) {
+          reject(new Error(`HTTP ${res.statusCode} fetching ${u}`));
+          return;
+        }
         res.pipe(file);
         file.on("finish", () => { file.close(); resolve(); });
       }).on("error", reject);
@@ -69,42 +76,22 @@ function downloadFile(url: string, dest: string): Promise<void> {
   });
 }
 
-// ── Dependency installers ─────────────────────────────────────────────────────
-
-async function installGit(): Promise<boolean> {
-  console.log(`  ${dim("Installing git...")}`);
-
+function unzipFile(zipPath: string, targetDir: string): boolean {
   if (IS_WIN) {
-    const tmp = join(homedir(), "AppData", "Local", "Temp", "git-installer.exe");
-    console.log(`  ${dim("Downloading Git for Windows...")}`);
-    await downloadFile(
-      "https://github.com/git-for-windows/git/releases/download/v2.45.1.windows.1/Git-2.45.1-64-bit.exe",
-      tmp
-    );
-    return run(tmp, ["/VERYSILENT", "/NORESTART", "/NOCANCEL", "/SP-", "/CLOSEAPPLICATIONS", "/RESTARTAPPLICATIONS", "/COMPONENTS=icons,ext\\reg\\shellhere,assoc,assoc_sh"]);
+    return run("powershell", [
+      "-NoProfile", "-Command",
+      `Expand-Archive -LiteralPath '${zipPath}' -DestinationPath '${targetDir}' -Force`
+    ]);
   }
-
-  if (IS_MAC) {
-    console.log(`  ${dim("Triggering Xcode Command Line Tools install...")}`);
-    console.log(`  ${dim("A system dialog will appear — click Install.")}`);
-    run("xcode-select", ["--install"]);
-    console.log();
-    await ask("  Press Enter once the installation completes... ");
-    return !!check("git");
+  if (IS_LINUX && !check("unzip")) {
+    if (check("apt-get", ["--version"])) run("sudo", ["apt-get", "install", "-y", "unzip"]);
+    else if (check("dnf",    ["--version"])) run("sudo", ["dnf",    "install", "-y", "unzip"]);
+    else if (check("pacman", ["--version"])) run("sudo", ["pacman", "-S", "--noconfirm", "unzip"]);
   }
-
-  if (IS_LINUX) {
-    if (check("apt-get", ["--version"])) {
-      return run("sudo", ["apt-get", "install", "-y", "git"]);
-    } else if (check("dnf", ["--version"])) {
-      return run("sudo", ["dnf", "install", "-y", "git"]);
-    } else if (check("pacman", ["--version"])) {
-      return run("sudo", ["pacman", "-S", "--noconfirm", "git"]);
-    }
-  }
-
-  return false;
+  return run("unzip", ["-q", "-o", zipPath, "-d", targetDir]);
 }
+
+// ── Node.js installer (npm needed for ToneAI runtime deps) ────────────────────
 
 async function installNode(): Promise<boolean> {
   console.log(`  ${dim("Installing Node.js...")}`);
@@ -132,7 +119,6 @@ async function installNode(): Promise<boolean> {
 
   if (IS_LINUX) {
     if (check("apt-get", ["--version"])) {
-      // NodeSource LTS via script
       run("bash", ["-c", "curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -"]);
       return run("sudo", ["apt-get", "install", "-y", "nodejs"]);
     } else if (check("dnf", ["--version"])) {
@@ -162,21 +148,7 @@ async function main() {
   console.log(bold("── Step 1: Prerequisites ──────────────────────────────────────"));
   console.log();
 
-  // git
-  let gitVersion = check("git");
-  if (!gitVersion) {
-    console.log(warn("git not found — installing..."));
-    const installed = await installGit();
-    gitVersion = check("git");
-    if (!installed || !gitVersion) {
-      console.log(err("git installation failed."));
-      console.log("  Please install git manually from https://git-scm.com and re-run.");
-      process.exit(1);
-    }
-  }
-  console.log(ok(`git — ${dim(gitVersion)}`));
-
-  // node
+  // node (for ToneAI runtime npm install)
   let nodeVersion = check("node") ?? check("node", ["-v"]);
   if (!nodeVersion) {
     console.log(warn("Node.js not found — installing..."));
@@ -212,24 +184,37 @@ async function main() {
 
   console.log();
 
-  // ── Step 2: Clone ──────────────────────────────────────────────────────────
+  // ── Step 2: Download ToneAI ───────────────────────────────────────────────
 
   console.log(bold("── Step 2: Download ToneAI ────────────────────────────────────"));
   console.log();
 
   const defaultDir = join(homedir(), "toneai");
-  const cloneDir = await ask(`  Where to install? [${defaultDir}] `);
-  const targetDir = cloneDir.trim() || defaultDir;
+  const userDir = await ask(`  Where to install? [${defaultDir}] `);
+  const targetDir = userDir.trim() || defaultDir;
 
   if (existsSync(targetDir)) {
     console.log(warn(`${targetDir} already exists — skipping download.`));
   } else {
     console.log(`  Downloading into ${cyan(targetDir)}...`);
     console.log();
-    const cloned = run("git", ["clone", "https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound.git", targetDir]);
-    if (!cloned) {
+
+    mkdirSync(targetDir, { recursive: true });
+    const zipPath = join(tmpdir(), `toneai-source-${Date.now()}.zip`);
+
+    try {
+      await downloadFile(ZIP_URL, zipPath);
+    } catch (e) {
       console.log();
-      console.log(err("Download failed. Check your internet connection and re-run."));
+      console.log(err(`Download failed: ${String(e)}`));
+      console.log("  Check your internet connection and re-run.");
+      process.exit(1);
+    }
+
+    const extracted = unzipFile(zipPath, targetDir);
+    if (!extracted) {
+      console.log();
+      console.log(err("Extraction failed."));
       process.exit(1);
     }
   }
@@ -238,23 +223,8 @@ async function main() {
   console.log(ok("ToneAI downloaded."));
   console.log();
 
-  // ── Step 3: Install dependencies ──────────────────────────────────────────
-
-  console.log(bold("── Step 3: Install dependencies ───────────────────────────────"));
-  console.log();
-  console.log(`  Installing Node.js packages...`);
-  console.log();
-
-  const npmOk = run("npm", ["install"], targetDir);
-  if (!npmOk) {
-    console.log(warn("npm install reported errors — ToneAI may still work. Continuing."));
-  } else {
-    console.log(ok("Dependencies installed."));
-  }
-
-  console.log();
-
-  // ── Done ───────────────────────────────────────────────────────────────────
+  // ── Done ──────────────────────────────────────────────────────────────────
+  // (npm install is handled by the agent on first launch — see WELCOME.md.)
 
   console.log(bold("── Done ───────────────────────────────────────────────────────"));
   console.log();

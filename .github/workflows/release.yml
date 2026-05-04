@@ -3,6 +3,9 @@ name: Release
 # Single unified release pipeline. Fires on every v* tag push and produces a
 # single GitHub release with ALL artifacts:
 #
+#   - install.sh / install.ps1                 (pipe-installer bootstrap, stable name)
+#   - toneai-setup.ts                           (TypeScript setup wizard, stable name)
+#   - toneai-source.zip                         (lean desktop bundle, stable name)
 #   - toneai-nux-qr-ironbound-desktop-v*.zip   (lean desktop, runtime npm install)
 #   - toneai-nux-qr-ironbound-v*.zip           (full ZIP, ~27MB, mobile-compatible)
 #   - toneai-setup-{linux-x64,win-x64.exe,mac-arm64,mac-x64}  (Bun-compiled binaries)
@@ -65,11 +68,26 @@ jobs:
           cd dist
           zip -r "../${REPO_NAME}-v${VERSION}.zip" .
 
-      - name: Upload product ZIPs as artifacts
+      - name: Stage pipe-installer assets (stable filenames for releases/latest/download/)
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          REPO_NAME="${{ github.event.repository.name }}"
+          # Source ZIP — same content as desktop ZIP, stable filename (no version)
+          cp "${REPO_NAME}-desktop-v${VERSION}.zip" toneai-source.zip
+          # Wizard TypeScript source — fetched by install.sh / install.ps1
+          cp setup/src/index.ts toneai-setup.ts
+          # install.sh and install.ps1 already at workspace root (from checkout)
+
+      - name: Upload product ZIPs + pipe-installer assets as artifacts
         uses: actions/upload-artifact@v4
         with:
           name: product-zips
-          path: '*-v*.zip'
+          path: |
+            *-v*.zip
+            toneai-source.zip
+            toneai-setup.ts
+            install.sh
+            install.ps1
 
   # ── Setup wizard binaries (Bun compile, 4 platforms) ─────────────────────
   build-setup-binaries:
@@ -249,9 +267,23 @@ jobs:
 
             Tell ToneAI what song or artist you want to sound like. It builds a NUX MightyAmp preset and saves a QR code you scan into the NUX app. Uses your existing AI subscription — no extra API key.
 
-            ## Download
+            ## Install
 
-            ### Path 1 — Setup wizard (recommended for non-developers)
+            ### Path 0 — Pipe installer (recommended)
+
+            **macOS / Linux:**
+            ```
+            curl -fsSL https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound/releases/latest/download/install.sh | bash
+            ```
+
+            **Windows (PowerShell):**
+            ```
+            irm https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound/releases/latest/download/install.ps1 | iex
+            ```
+
+            One-liner. Installs Bun if missing, fetches the setup wizard, downloads ToneAI into `~/toneai`, prints how to launch it. No signed-installer permissions, no manual download, always picks up the latest release.
+
+            ### Path 1 — Setup wizard binary (alternative)
 
             **Windows:** Download and run `toneai-setup.exe`
 
