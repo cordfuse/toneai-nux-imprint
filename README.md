@@ -8,48 +8,52 @@ It runs inside your existing AI account — Claude, Gemini, or OpenAI. No API ke
 
 ## Getting started
 
-Two install paths — setup wizard for non-developers, CLI for developers. Both run on any desktop OS.
+### Install
 
-### Path 1 — Setup wizard (recommended for non-developers)
+**macOS / Linux:**
+```
+curl -fsSL https://cdn.jsdelivr.net/gh/steve-krisjanovs/toneai-nux-qr-ironbound@latest/install.sh | bash
+```
 
-| Platform | Install |
-|---|---|
-| **Windows** | Download and run `toneai-setup.exe` from [Releases](../../releases) |
-| **macOS** | `brew tap steve-krisjanovs/tools && brew install toneai-setup && toneai-setup` |
-| **Linux (Debian/Ubuntu)** | `sudo dpkg -i toneai-setup_*_amd64.deb` |
-| **Linux (Fedora/RHEL)** | `sudo rpm -i toneai-setup-*-1.x86_64.rpm` |
+**Windows (PowerShell):**
+```
+irm https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound/releases/latest/download/install.ps1 | iex
+```
 
-The wizard handles agent install, project location, and first-launch defaults. No terminal experience required after `toneai-setup` runs.
+The installer ensures Bun is available, downloads ToneAI, and prints the launch command. Requires an AI agent CLI to be installed first (see Requirements).
 
-### Path 2 — Desktop CLI (developers)
+### Launch
 
-1. Download `*-desktop-v*.zip` from [Releases](../../releases)
-2. Extract it and open the folder in any supported agent CLI
-3. Say hello — ToneAI handles the rest
+```
+cd ~/toneai
+claude        # or: gemini / codex / opencode
+```
 
 **Supported agents (any desktop OS):**
 
-| Agent | Command | Notes |
-|---|---|---|
-| Claude Code | `claude` | Anthropic's CLI |
-| Gemini CLI | `gemini` | Google's official CLI |
-| Codex CLI | `codex` | OpenAI's CLI |
-| OpenCode | `opencode` | Open-source alternative |
+| Agent | Command |
+|---|---|
+| Claude Code | `claude` |
+| Gemini CLI | `gemini` |
+| Codex CLI | `codex` |
+| OpenCode | `opencode` |
 
 On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 
 ### Not supported
 
-Web/mobile chat clients are not viable for ToneAI as a recurring tool. Tested 2026-05-04:
+ToneAI requires a CLI agent with local filesystem access. Tested 2026-05-04:
 
 | Surface | Status |
 |---|---|
-| Claude.ai web/mobile chat | ⚠️ Technically works as a one-off (attach ZIP, send prompt), but each new chat requires re-attaching and re-prompting. Use Path 1 or Path 2 for repeat use. |
-| Claude Projects | ❌ ZIP uploads not accepted; GitHub-as-knowledge connection doesn't run as the persona |
+| Claude Desktop (Chat / Cowork / Projects) | ❌ Hardened against persona injection — refuses pipe install, blocks IRONBOUND.md as a jailbreak vector, Cowork has a locked system prompt |
+| ChatGPT Desktop | ❌ Sandboxed — no local network or filesystem access |
+| Gemini Desktop | ❌ Requires manual project seeding each session — not viable as a recurring tool |
+| Claude.ai web/mobile | ❌ Each new chat requires re-attaching ZIP and re-prompting |
 | ChatGPT web | ❌ Safety layer rejects the persona-takeover pattern |
 | Gemini web | ❌ Emits a JSON output file instead of running as ToneAI |
 
-If you can't install Path 1 or Path 2, ToneAI isn't the right shape for your environment. Use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
+If you can't run a CLI agent, use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
 
 ---
 
@@ -102,7 +106,7 @@ Bass players: BassMate amp, TR212Pro cab, compressor always on.
 ## Requirements
 
 - An AI agent CLI with an active account ([Claude Code](https://claude.ai/download), [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Codex](https://platform.openai.com/codex), or [OpenCode](https://opencode.ai))
-- Node.js — or let ToneAI install a portable copy if you don't have it
+- Node.js
 - A NUX MightyAmp device and the NUX app to scan QR codes
 
 ---
