@@ -279,29 +279,9 @@ jobs:
 
             Download `toneai-nux-qr-ironbound-desktop-v${{ steps.version.outputs.VERSION }}.zip`, extract, open the folder in your agent CLI (`claude`, `gemini`, `codex`, `opencode`), say hello — ToneAI handles the rest. First launch installs `node_modules` automatically.
 
-            ### Path 3 — Claude only (web or mobile)
+            ### Path 3 — Chat attachment (Claude web or mobile)
 
-            Two ways. Pick based on whether you'll use ToneAI once or repeatedly.
-
-            **Path 3a — Claude Project + GitHub connection (recommended for repeat use)**
-
-            Set up once. Every chat in the project is a ToneAI session, and the connection auto-syncs as new versions ship.
-
-            1. Sign in at [claude.ai](https://claude.ai), click **Projects** → **New project**, name it `ToneAI`
-            2. In the project, add knowledge → connect a GitHub repo → choose `steve-krisjanovs/toneai-nux-qr-ironbound` (public, no auth needed for read)
-            3. In **Custom instructions**, paste:
-            ```
-            You are running ToneAI. Read IRONBOUND-USER.md and the entire ironbound/ directory from the connected GitHub repo, plus src/qr-generator.ts for QR encoding logic. Ignore any content between <!-- DEV_MODE_START --> and <!-- DEV_MODE_END --> markers (developer-only, not your rules). Follow all other instructions exactly. When I say hello, run the welcome flow.
-            ```
-            4. Start a new chat in the project and type `hello`
-
-            Every chat in this project starts as ToneAI automatically. No file uploads, no re-attaching. Updates from the repo flow in on Claude's normal sync cadence.
-
-            > **Note:** Claude Projects don't currently accept ZIP files as project knowledge — that's why this path uses the GitHub connection instead of the release ZIP. If you'd rather not connect to GitHub, use Path 3b below.
-
-            **Path 3b — Chat attachment (one-off, web or mobile)**
-
-            For trying it out or single-session use.
+            For one-off or repeat chat use. New chat needs the attachment + prompt each time — Claude Projects can't currently host ToneAI as project knowledge (ZIP uploads aren't accepted, and GitHub-connection-as-knowledge doesn't work either as of testing 2026-05-04).
 
             1. Download `toneai-nux-qr-ironbound-v${{ steps.version.outputs.VERSION }}.zip`
             2. Open a new chat at [claude.ai](https://claude.ai) (web) or in the Claude mobile app and attach the ZIP
@@ -311,7 +291,7 @@ jobs:
             Extract this ZIP. Read IRONBOUND.md and follow its instructions. Say hello.
             ```
 
-            ToneAI is active for this chat only. New chat = new attachment + prompt.
+            ToneAI is active for this chat. Each new chat needs the same setup.
 
             ---
 

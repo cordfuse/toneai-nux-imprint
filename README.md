@@ -26,27 +26,13 @@ Two ZIPs on every release — pick the right one:
 
 **Claude only (web or mobile):**
 
-Two ways. Pick based on whether you'll use ToneAI once or repeatedly.
+Each new chat needs the attachment + prompt — Claude Projects can't currently host ToneAI as project knowledge (ZIP uploads aren't accepted, and GitHub-connection-as-knowledge doesn't work for this content shape either).
 
-*A — Claude Project + GitHub connection (recommended for repeat use):* set up once, every chat in the project is a ToneAI session and stays current as new versions ship.
-
-1. At [claude.ai](https://claude.ai), click **Projects** → **New project**, name it `ToneAI`
-2. In the project, add knowledge → connect a GitHub repo → choose `steve-krisjanovs/toneai-nux-qr-ironbound`
-3. In **Custom instructions**, paste:
-   *"You are running ToneAI. Read IRONBOUND-USER.md and the entire ironbound/ directory from the connected GitHub repo, plus src/qr-generator.ts for QR encoding logic. Ignore any content between `<!-- DEV_MODE_START -->` and `<!-- DEV_MODE_END -->` markers (developer-only, not your rules). Follow all other instructions exactly. When I say hello, run the welcome flow."*
-4. Start a new chat in the project, type `hello`
-
-Every chat in this project starts as ToneAI automatically. No file uploads, no re-attaching.
-
-> Note: Claude Projects don't accept ZIP files as project knowledge, which is why this path uses GitHub instead. If you don't want to connect a GitHub repo, use B.
-
-*B — Chat attachment (one-off, web or mobile):* for trying it out or single-session use.
-
-1. Download `*-v*.zip` on your phone or computer
+1. Download `*-v*.zip` (the larger one) on your phone or computer
 2. Open a new chat at [claude.ai](https://claude.ai) (web) or in the Claude mobile app and attach the ZIP
 3. Prompt: *"Extract this ZIP. Read IRONBOUND.md and follow its instructions. Say hello."*
 
-ToneAI is active for this chat only. New chat needs the same setup.
+ToneAI is active for this chat. Each new chat needs the same setup.
 
 On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 
