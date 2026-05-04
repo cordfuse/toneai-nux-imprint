@@ -28,7 +28,7 @@ Two ZIPs on every release — pick the right one:
 
 1. Download `*-v*.zip` (the larger one) on your phone or computer
 2. Upload it to [claude.ai](https://claude.ai) or [ChatGPT](https://chat.openai.com)
-3. Prompt: *"Extract this ZIP. Read CLAUDE.md and follow its instructions. Say hello."* (use AGENTS.md for ChatGPT)
+3. Prompt: *"Extract this ZIP. Read IRONBOUND.md and follow its instructions. Say hello."*
 
 On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 

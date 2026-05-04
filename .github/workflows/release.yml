@@ -285,14 +285,8 @@ jobs:
             2. Open a new chat at [claude.ai](https://claude.ai) or [chatgpt.com](https://chatgpt.com) and attach the ZIP
             3. Send this prompt:
 
-            **For Claude.ai:**
             ```
-            Extract this ZIP. Read CLAUDE.md and follow its instructions. Say hello.
-            ```
-
-            **For ChatGPT:**
-            ```
-            Extract this ZIP. Read AGENTS.md and follow its instructions. Say hello.
+            Extract this ZIP. Read IRONBOUND.md and follow its instructions. Say hello.
             ```
 
             On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
