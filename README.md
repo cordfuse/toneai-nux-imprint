@@ -24,21 +24,23 @@ Two ZIPs on every release — pick the right one:
 3. Run your agent CLI: `claude`, `gemini`, `codex`, or `opencode`
 4. Say hello — ToneAI handles the rest
 
-**Mobile / web upload (Claude only):**
+**Claude only (web or mobile):**
 
-Two ways. Same ZIP, same end result. Pick based on whether you'll use ToneAI once or repeatedly.
+Two ways. Pick based on whether you'll use ToneAI once or repeatedly.
 
-*A — Claude Project (recommended for repeat use):* set up once, every chat in the project is a ToneAI session.
+*A — Claude Project + GitHub connection (recommended for repeat use):* set up once, every chat in the project is a ToneAI session and stays current as new versions ship.
 
-1. Download `*-v*.zip` (the larger one)
-2. At [claude.ai](https://claude.ai), click **Projects** → **New project**, name it `ToneAI`
-3. In **Project knowledge**, upload the ZIP
-4. In **Custom instructions**, paste: *"You are running ToneAI. Read IRONBOUND.md from the uploaded ZIP and follow its instructions exactly. When I say hello, run the welcome flow."*
-5. Start a new chat in the project, type `hello`
+1. At [claude.ai](https://claude.ai), click **Projects** → **New project**, name it `ToneAI`
+2. In the project, add knowledge → connect a GitHub repo → choose `steve-krisjanovs/toneai-nux-qr-ironbound`
+3. In **Custom instructions**, paste:
+   *"You are running ToneAI. Read IRONBOUND-USER.md and the entire ironbound/ directory from the connected GitHub repo, plus src/qr-generator.ts for QR encoding logic. Ignore any content between `<!-- DEV_MODE_START -->` and `<!-- DEV_MODE_END -->` markers (developer-only, not your rules). Follow all other instructions exactly. When I say hello, run the welcome flow."*
+4. Start a new chat in the project, type `hello`
 
-Every chat in this project starts as ToneAI automatically. No re-attaching, no re-prompting.
+Every chat in this project starts as ToneAI automatically. No file uploads, no re-attaching.
 
-*B — Chat attachment (one-off):* for trying it out or single-session use.
+> Note: Claude Projects don't accept ZIP files as project knowledge, which is why this path uses GitHub instead. If you don't want to connect a GitHub repo, use B.
+
+*B — Chat attachment (one-off, web or mobile):* for trying it out or single-session use.
 
 1. Download `*-v*.zip` on your phone or computer
 2. Open a new chat at [claude.ai](https://claude.ai) (web) or in the Claude mobile app and attach the ZIP
