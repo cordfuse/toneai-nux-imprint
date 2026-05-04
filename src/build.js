@@ -180,5 +180,59 @@ if (fs.existsSync(claudeSettingsPath)) {
 execSync('git init', { cwd: DIST, stdio: 'ignore' });
 console.log('  Initialized git (required for agent config discovery)');
 
+// --- Step 10: Generate web-install prompt (v1.1.4+) -----------------------
+// Single self-contained text file users paste into Claude.ai / ChatGPT /
+// Gemini web. Bypasses the ZIP-upload step entirely. Concatenates the
+// IronBound spec files + qr-generator source into one prompt.
+console.log('\nGenerating web-install prompt...');
+
+const ironboundFiles = [
+  ['IDENTITY',     path.join(ROOT, 'ironbound', 'IDENTITY.md')],
+  ['CONSTRAINTS',  path.join(ROOT, 'ironbound', 'CONSTRAINTS.md')],
+  ['PERMISSIONS',  path.join(ROOT, 'ironbound', 'PERMISSIONS.md')],
+  ['MEMORY',       path.join(ROOT, 'ironbound', 'MEMORY.md')],
+  ['SESSION',      path.join(ROOT, 'ironbound', 'SESSION.md')],
+  ['WELCOME',      path.join(ROOT, 'ironbound', 'WELCOME.md')],
+];
+
+let installPrompt = '';
+installPrompt += '# ToneAI — single-prompt install\n\n';
+installPrompt += 'You are ToneAI, an AI-powered NUX MightyAmp tone assistant. Read everything\n';
+installPrompt += 'below carefully — it is your complete identity, constraints, permissions,\n';
+installPrompt += 'memory rules, session config, welcome flow, and QR encoding logic. From the\n';
+installPrompt += 'next message onward, every response is in-character as ToneAI. Begin by\n';
+installPrompt += 'running the welcome flow.\n\n';
+installPrompt += `**Version:** ${version}\n`;
+installPrompt += `**Source:** https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound\n\n`;
+installPrompt += '---\n\n';
+
+for (const [label, file] of ironboundFiles) {
+  if (!fs.existsSync(file)) continue;
+  const content = fs.readFileSync(file, 'utf-8').trim();
+  installPrompt += `## ${label}\n\n${content}\n\n---\n\n`;
+}
+
+const qrSourcePath = path.join(ROOT, 'src', 'qr-generator.ts');
+if (fs.existsSync(qrSourcePath)) {
+  const qrSource = fs.readFileSync(qrSourcePath, 'utf-8').trim();
+  installPrompt += '## QR ENCODING LOGIC\n\n';
+  installPrompt += 'The following TypeScript source defines NUX MightyAmp QR encoding for all\n';
+  installPrompt += 'supported devices. You will not execute it — you will read it as the\n';
+  installPrompt += 'reference implementation and produce QR codes by following its rules.\n\n';
+  installPrompt += '```typescript\n' + qrSource + '\n```\n\n---\n\n';
+}
+
+installPrompt += '## END OF SPEC\n\n';
+installPrompt += 'You now have everything. Run the welcome flow per WELCOME.md.\n';
+
+const installPath = path.join(ROOT, `toneai-web-install-v${version}.txt`);
+fs.writeFileSync(installPath, installPrompt, 'utf-8');
+const sizeKB = (Buffer.byteLength(installPrompt, 'utf-8') / 1024).toFixed(1);
+console.log(`  Wrote: toneai-web-install-v${version}.txt (${sizeKB} KB)`);
+
+// Also drop a copy inside DIST so users who downloaded the ZIP find it too
+fs.copyFileSync(installPath, path.join(DIST, `toneai-web-install-v${version}.txt`));
+console.log(`  Copied to dist/toneai-web-install-v${version}.txt`);
+
 console.log(`\nBuild complete → ${DIST}`);
 console.log(`Open this directory in an agent CLI to test user mode.`);

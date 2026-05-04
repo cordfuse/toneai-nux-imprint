@@ -195,6 +195,7 @@ GITHUB_TOKEN="" gh release edit vX.X.X --repo steve-krisjanovs/toneai-nux-qr-iro
 | v1.1.1 | Desktop: deps install at runtime on first launch, not bundled in ZIP |
 | v1.1.2 | Dual ZIPs — `*-desktop-*` (lean, runtime install) and `*-v*` (full, mobile-compatible) |
 | v1.1.3 | CI consolidation — merged `setup-release.yml` into `release.yml`. Single GitHub release per version with ALL artifacts (product ZIPs + setup wizard binaries + OS installers + homebrew formula update). Closes the dual-release "Latest"-flag confusion that hid product ZIPs behind a non-version tag. |
+| v1.1.4 | **Single-prompt install for chat web.** New `toneai-web-install-v*.txt` artifact — a ~46KB self-contained text file users paste into Claude.ai / ChatGPT / Gemini web. Bypasses ZIP-upload-to-project entirely. `src/build.js` step 10 generates the prompt by concatenating ironbound/IDENTITY+CONSTRAINTS+PERMISSIONS+MEMORY+SESSION+WELCOME + src/qr-generator.ts. README rewritten with four install paths (setup wizard / single-prompt / desktop CLI / full bundle). |
 
 ---
 
