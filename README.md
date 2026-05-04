@@ -10,11 +10,11 @@ It runs inside your existing AI account — Claude, Gemini, or OpenAI. No API ke
 
 Two ZIPs on every release — pick the right one:
 
-| | Desktop | Mobile |
+| | Desktop | Mobile / Claude web |
 |---|---|---|
 | **File** | `*-desktop-v*.zip` | `*-v*.zip` |
 | **Size** | Small | ~27MB |
-| **For** | CLI agents on your machine | Claude.ai, ChatGPT web upload |
+| **For** | CLI agents on your machine | Claude.ai web + Claude mobile |
 | **Node modules** | Installed on first launch | Bundled |
 
 **Desktop (CLI):**
@@ -24,15 +24,24 @@ Two ZIPs on every release — pick the right one:
 3. Run your agent CLI: `claude`, `gemini`, `codex`, or `opencode`
 4. Say hello — ToneAI handles the rest
 
-**Mobile / web upload:**
+**Mobile / web upload (Claude only):**
 
 1. Download `*-v*.zip` (the larger one) on your phone or computer
-2. Upload it to [claude.ai](https://claude.ai) or [ChatGPT](https://chat.openai.com)
+2. Open a new chat at [claude.ai](https://claude.ai) (web) or in the Claude mobile app and attach the ZIP
 3. Prompt: *"Extract this ZIP. Read IRONBOUND.md and follow its instructions. Say hello."*
 
 On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 
-> Gemini web is not supported — Gemini CLI only.
+**Platform support (tested 2026-05-04, v1.1.6):**
+
+| Platform | Status |
+|---|---|
+| Claude.ai web | ✅ Works |
+| Claude mobile | ✅ Works |
+| ChatGPT web | ❌ Blocked — ChatGPT's safety layer rejects the persona-takeover pattern |
+| Gemini web | ❌ Not supported — Gemini interprets the prompt as a "generate output" task and emits a JSON file instead of running as ToneAI |
+| Gemini CLI | ✅ Use Path 1 (Desktop CLI) |
+| ChatGPT CLI (Codex) | ✅ Use Path 1 (Desktop CLI) |
 
 ---
 

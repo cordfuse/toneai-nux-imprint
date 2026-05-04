@@ -279,10 +279,10 @@ jobs:
 
             Download `toneai-nux-qr-ironbound-desktop-v${{ steps.version.outputs.VERSION }}.zip`, extract, open the folder in your agent CLI (`claude`, `gemini`, `codex`, `opencode`), say hello — ToneAI handles the rest. First launch installs `node_modules` automatically.
 
-            ### Path 3 — Chat web upload (Claude.ai or ChatGPT)
+            ### Path 3 — Chat upload (Claude only)
 
             1. Download `toneai-nux-qr-ironbound-v${{ steps.version.outputs.VERSION }}.zip` (the ~27MB bundle, includes `node_modules`)
-            2. Open a new chat at [claude.ai](https://claude.ai) or [chatgpt.com](https://chatgpt.com) and attach the ZIP
+            2. Open a new chat at [claude.ai](https://claude.ai) (web) or in the Claude mobile app and attach the ZIP
             3. Send this prompt:
 
             ```
@@ -291,7 +291,15 @@ jobs:
 
             On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 
-            > **Gemini web is not supported** — Gemini CLI only. For Gemini, use Path 2 with the desktop ZIP.
+            **Platform support (tested 2026-05-04, v1.1.6):**
+
+            | Platform | Status |
+            |---|---|
+            | Claude.ai web | ✅ Works |
+            | Claude mobile | ✅ Works |
+            | ChatGPT web | ❌ Blocked — ChatGPT's safety layer rejects the persona-takeover pattern |
+            | Gemini web | ❌ Not supported — Gemini emits a JSON output file instead of running as ToneAI |
+            | Gemini CLI / Codex CLI / OpenCode | ✅ Use Path 2 (Desktop CLI) |
           files: release-assets/**/*
           draft: false
           prerelease: false
