@@ -194,6 +194,7 @@ GITHUB_TOKEN="" gh release edit vX.X.X --repo steve-krisjanovs/toneai-nux-qr-iro
 | v1.1.0 | Rig awareness + instrument switching — pickup-calibrated gain/noise gate/EQ, mid-session switching |
 | v1.1.1 | Desktop: deps install at runtime on first launch, not bundled in ZIP |
 | v1.1.2 | Dual ZIPs — `*-desktop-*` (lean, runtime install) and `*-v*` (full, mobile-compatible) |
+| v1.1.3 | CI consolidation — merged `setup-release.yml` into `release.yml`. Single GitHub release per version with ALL artifacts (product ZIPs + setup wizard binaries + OS installers + homebrew formula update). Closes the dual-release "Latest"-flag confusion that hid product ZIPs behind a non-version tag. |
 
 ---
 
