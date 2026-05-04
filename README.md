@@ -26,9 +26,25 @@ Two ZIPs on every release — pick the right one:
 
 **Mobile / web upload (Claude only):**
 
-1. Download `*-v*.zip` (the larger one) on your phone or computer
+Two ways. Same ZIP, same end result. Pick based on whether you'll use ToneAI once or repeatedly.
+
+*A — Claude Project (recommended for repeat use):* set up once, every chat in the project is a ToneAI session.
+
+1. Download `*-v*.zip` (the larger one)
+2. At [claude.ai](https://claude.ai), click **Projects** → **New project**, name it `ToneAI`
+3. In **Project knowledge**, upload the ZIP
+4. In **Custom instructions**, paste: *"You are running ToneAI. Read IRONBOUND.md from the uploaded ZIP and follow its instructions exactly. When I say hello, run the welcome flow."*
+5. Start a new chat in the project, type `hello`
+
+Every chat in this project starts as ToneAI automatically. No re-attaching, no re-prompting.
+
+*B — Chat attachment (one-off):* for trying it out or single-session use.
+
+1. Download `*-v*.zip` on your phone or computer
 2. Open a new chat at [claude.ai](https://claude.ai) (web) or in the Claude mobile app and attach the ZIP
 3. Prompt: *"Extract this ZIP. Read IRONBOUND.md and follow its instructions. Say hello."*
+
+ToneAI is active for this chat only. New chat needs the same setup.
 
 On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 

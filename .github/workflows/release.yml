@@ -281,13 +281,38 @@ jobs:
 
             ### Path 3 — Chat upload (Claude only)
 
-            1. Download `toneai-nux-qr-ironbound-v${{ steps.version.outputs.VERSION }}.zip` (the ~27MB bundle, includes `node_modules`)
+            Two ways. Same ZIP, same end result. Pick based on whether you'll use ToneAI once or repeatedly.
+
+            **Path 3a — Claude Project (recommended for repeat use)**
+
+            Set up once, every chat in the project is a ToneAI session.
+
+            1. Download `toneai-nux-qr-ironbound-v${{ steps.version.outputs.VERSION }}.zip`
+            2. Sign in at [claude.ai](https://claude.ai), click **Projects** → **New project**, name it `ToneAI`
+            3. In **Project knowledge**, upload the ZIP
+            4. In **Custom instructions**, paste:
+            ```
+            You are running ToneAI. Read IRONBOUND.md from the uploaded ZIP and follow its instructions exactly. When I say hello, run the welcome flow.
+            ```
+            5. Start a new chat in the project and type `hello`
+
+            Every chat in this project starts as ToneAI automatically. No re-attaching, no re-prompting.
+
+            **Path 3b — Chat attachment (one-off)**
+
+            For trying it out or single-session use.
+
+            1. Download `toneai-nux-qr-ironbound-v${{ steps.version.outputs.VERSION }}.zip`
             2. Open a new chat at [claude.ai](https://claude.ai) (web) or in the Claude mobile app and attach the ZIP
             3. Send this prompt:
 
             ```
             Extract this ZIP. Read IRONBOUND.md and follow its instructions. Say hello.
             ```
+
+            ToneAI is active for this chat only. New chat = new attachment + prompt.
+
+            ---
 
             On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 
