@@ -8,44 +8,48 @@ It runs inside your existing AI account — Claude, Gemini, or OpenAI. No API ke
 
 ## Getting started
 
-Two ZIPs on every release — pick the right one:
+Two install paths — setup wizard for non-developers, CLI for developers. Both run on any desktop OS.
 
-| | Desktop | Mobile / Claude web |
-|---|---|---|
-| **File** | `*-desktop-v*.zip` | `*-v*.zip` |
-| **Size** | Small | ~27MB |
-| **For** | CLI agents on your machine | Claude.ai web + Claude mobile |
-| **Node modules** | Installed on first launch | Bundled |
+### Path 1 — Setup wizard (recommended for non-developers)
 
-**Desktop (CLI):**
+| Platform | Install |
+|---|---|
+| **Windows** | Download and run `toneai-setup.exe` from [Releases](../../releases) |
+| **macOS** | `brew tap steve-krisjanovs/tools && brew install toneai-setup && toneai-setup` |
+| **Linux (Debian/Ubuntu)** | `sudo dpkg -i toneai-setup_*_amd64.deb` |
+| **Linux (Fedora/RHEL)** | `sudo rpm -i toneai-setup-*-1.x86_64.rpm` |
+
+The wizard handles agent install, project location, and first-launch defaults. No terminal experience required after `toneai-setup` runs.
+
+### Path 2 — Desktop CLI (developers)
 
 1. Download `*-desktop-v*.zip` from [Releases](../../releases)
-2. Extract it and open a terminal in that folder
-3. Run your agent CLI: `claude`, `gemini`, `codex`, or `opencode`
-4. Say hello — ToneAI handles the rest
+2. Extract it and open the folder in any supported agent CLI
+3. Say hello — ToneAI handles the rest
 
-**Claude only (web or mobile):**
+**Supported agents (any desktop OS):**
 
-Each new chat needs the attachment + prompt — Claude Projects can't currently host ToneAI as project knowledge (ZIP uploads aren't accepted, and GitHub-connection-as-knowledge doesn't work for this content shape either).
-
-1. Download `*-v*.zip` (the larger one) on your phone or computer
-2. Open a new chat at [claude.ai](https://claude.ai) (web) or in the Claude mobile app and attach the ZIP
-3. Prompt: *"Extract this ZIP. Read IRONBOUND.md and follow its instructions. Say hello."*
-
-ToneAI is active for this chat. Each new chat needs the same setup.
+| Agent | Command | Notes |
+|---|---|---|
+| Claude Code | `claude` | Anthropic's CLI; works in any terminal, including Claude Desktop's built-in CLI |
+| Gemini CLI | `gemini` | Google's official CLI |
+| Codex CLI | `codex` | OpenAI's CLI |
+| OpenCode | `opencode` | Open-source alternative |
 
 On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 
-**Platform support (tested 2026-05-04, v1.1.6):**
+### Not supported
 
-| Platform | Status |
+Web/mobile chat clients are not viable for ToneAI as a recurring tool. Tested 2026-05-04:
+
+| Surface | Status |
 |---|---|
-| Claude.ai web | ✅ Works |
-| Claude mobile | ✅ Works |
-| ChatGPT web | ❌ Blocked — ChatGPT's safety layer rejects the persona-takeover pattern |
-| Gemini web | ❌ Not supported — Gemini interprets the prompt as a "generate output" task and emits a JSON file instead of running as ToneAI |
-| Gemini CLI | ✅ Use Path 1 (Desktop CLI) |
-| ChatGPT CLI (Codex) | ✅ Use Path 1 (Desktop CLI) |
+| Claude.ai web/mobile chat | ⚠️ Technically works as a one-off (attach ZIP, send prompt), but each new chat requires re-attaching and re-prompting. Use Path 1 or Path 2 for repeat use. |
+| Claude Projects | ❌ ZIP uploads not accepted; GitHub-as-knowledge connection doesn't run as the persona |
+| ChatGPT web | ❌ Safety layer rejects the persona-takeover pattern |
+| Gemini web | ❌ Emits a JSON output file instead of running as ToneAI |
+
+If you can't install Path 1 or Path 2, ToneAI isn't the right shape for your environment. Use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
 
 ---
 
