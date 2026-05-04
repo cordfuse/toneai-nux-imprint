@@ -29,12 +29,13 @@ The wizard handles agent install, project location, and first-launch defaults. N
 
 **Supported agents (any desktop OS):**
 
-| Agent | Command | Notes |
+| Agent | Surface | Notes |
 |---|---|---|
-| Claude Code | `claude` | Anthropic's CLI; works in any terminal, including Claude Desktop's built-in CLI |
-| Gemini CLI | `gemini` | Google's official CLI |
-| Codex CLI | `codex` | OpenAI's CLI |
-| OpenCode | `opencode` | Open-source alternative |
+| Claude Code | `claude` (terminal) | Anthropic's CLI — runs in any terminal |
+| Claude Desktop | Native Mac/Windows app | Open the extracted folder in the app; same agent engine as Claude Code, GUI surface instead of terminal |
+| Gemini CLI | `gemini` (terminal) | Google's official CLI |
+| Codex CLI | `codex` (terminal) | OpenAI's CLI |
+| OpenCode | `opencode` (terminal) | Open-source alternative |
 
 On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 
