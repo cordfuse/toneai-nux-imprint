@@ -94,10 +94,10 @@ For albums, one request generates a full set — one preset per track, researche
 ## Supported devices
 
 **Pro format** (full effect chain, preset name embedded in QR):
-`Plug Pro` · `Space` · `Lite MK2` · `8BT MK2`
+`Plug Pro` · `Space` · `Lite MK2` · `8BT MK2` · `20BT MK2` · `40BT MK2` · `60BT MK2`
 
 **Standard format** (device-specific effect IDs):
-`Plug Air V1/V2` · `Mighty Air V1/V2` · `Lite` · `8BT` · `2040BT`
+`Plug Air V1/V2` · `Mighty Air V1/V2` · `Mighty Go` · `Lite` · `8BT` · `20/40BT (original)` · `40BT (original)`
 
 Bass players: BassMate amp, TR212Pro cab, compressor always on.
 
