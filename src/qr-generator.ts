@@ -23,9 +23,9 @@ const VERSION = readFileSync(resolve(__dirname, '../version.txt'), 'utf8').trim(
 // ── Types ──────────────────────────────────────────────────────────────────────
 
 type DeviceType =
-  | 'plugpro' | 'space' | 'litemk2' | '8btmk2'
-  | 'plugair_v1' | 'plugair_v2' | 'mightyair_v1' | 'mightyair_v2'
-  | 'lite' | '8bt' | '2040bt'
+  | 'plugpro' | 'space' | 'litemk2' | '8btmk2' | '20btmk2' | '40btmk2' | '60btmk2'
+  | 'plugair_v1' | 'plugair_v2' | 'mightyair_v1' | 'mightyair_v2' | 'mightygo'
+  | 'lite' | '8bt' | '2040bt' | '40bt'
 
 interface DeviceConfig {
   deviceQRId: number
@@ -39,18 +39,23 @@ const DEVICES: Record<DeviceType, DeviceConfig> = {
   space:        { deviceQRId: 15, deviceQRVersion: 1, format: 'pro',      displayName: 'Mighty Space' },
   litemk2:      { deviceQRId: 19, deviceQRVersion: 1, format: 'pro',      displayName: 'Mighty Lite MkII' },
   '8btmk2':     { deviceQRId: 20, deviceQRVersion: 1, format: 'pro',      displayName: 'Mighty 8BT MkII' },
+  '20btmk2':    { deviceQRId: 21, deviceQRVersion: 1, format: 'pro',      displayName: 'Mighty 20BT MkII' },
+  '40btmk2':    { deviceQRId: 22, deviceQRVersion: 1, format: 'pro',      displayName: 'Mighty 40BT MkII' },
+  '60btmk2':    { deviceQRId: 23, deviceQRVersion: 1, format: 'pro',      displayName: 'Mighty 60BT MkII' },
   plugair_v1:   { deviceQRId: 11, deviceQRVersion: 0, format: 'standard', displayName: 'Mighty Plug (v1)' },
   plugair_v2:   { deviceQRId: 11, deviceQRVersion: 2, format: 'standard', displayName: 'Mighty Plug (v2)' },
   mightyair_v1: { deviceQRId: 11, deviceQRVersion: 0, format: 'standard', displayName: 'Mighty Air (v1)' },
   mightyair_v2: { deviceQRId: 11, deviceQRVersion: 2, format: 'standard', displayName: 'Mighty Air (v2)' },
+  mightygo:     { deviceQRId: 10, deviceQRVersion: 2, format: 'standard', displayName: 'Mighty Go' },
   lite:         { deviceQRId: 9,  deviceQRVersion: 1, format: 'standard', displayName: 'Mighty Lite BT' },
   '8bt':        { deviceQRId: 12, deviceQRVersion: 1, format: 'standard', displayName: 'Mighty 8BT' },
-  '2040bt':     { deviceQRId: 7,  deviceQRVersion: 1, format: 'standard', displayName: 'Mighty 20/40BT' },
+  '2040bt':     { deviceQRId: 7,  deviceQRVersion: 1, format: 'standard', displayName: 'Mighty 20/40BT (original)' },
+  '40bt':       { deviceQRId: 8,  deviceQRVersion: 1, format: 'standard', displayName: 'Mighty 40BT (original)' },
 }
 
-const STANDARD_DEVICES_NO_CAB = new Set<DeviceType>(['lite', '8bt', '2040bt'])
-const PLUG_AIR_DEVICES = new Set<DeviceType>(['plugair_v1', 'plugair_v2', 'mightyair_v1', 'mightyair_v2'])
-const PRO_DEVICES = new Set<DeviceType>(['plugpro', 'space', 'litemk2', '8btmk2'])
+const STANDARD_DEVICES_NO_CAB = new Set<DeviceType>(['lite', '8bt', '2040bt', '40bt'])
+const PLUG_AIR_DEVICES = new Set<DeviceType>(['plugair_v1', 'plugair_v2', 'mightyair_v1', 'mightyair_v2', 'mightygo'])
+const PRO_DEVICES = new Set<DeviceType>(['plugpro', 'space', 'litemk2', '8btmk2', '20btmk2', '40btmk2', '60btmk2'])
 
 interface AmpParams      { id: number; gain: number; master: number; bass: number; mid: number; treble: number; param6?: number; param7?: number }
 interface CabinetParams  { id: number; level_db: number; low_cut_hz: number; high_cut: number }
@@ -185,11 +190,11 @@ function buildQRString(p: PresetParams): string {
     payload = buildProPayload(p)
   } else {
     switch (p.device) {
-      case 'plugair_v1': case 'plugair_v2': case 'mightyair_v1': case 'mightyair_v2':
+      case 'plugair_v1': case 'plugair_v2': case 'mightyair_v1': case 'mightyair_v2': case 'mightygo':
         payload = buildPlugAirPayload(p); break
       case 'lite':   payload = buildLitePayload(p); break
       case '8bt':    payload = build8BTPayload(p); break
-      case '2040bt': payload = build2040BTPayload(p); break
+      case '2040bt': case '40bt': payload = build2040BTPayload(p); break
       default: throw new Error(`Unknown standard device: ${p.device}`)
     }
   }
@@ -244,7 +249,7 @@ function coerceParams(raw: Record<string, unknown>): PresetParams {
     master_db: n(raw.master_db, 0),
   }
 
-  if (device === '2040bt' && raw.wah && typeof raw.wah === 'object') {
+  if ((device === '2040bt' || device === '40bt') && raw.wah && typeof raw.wah === 'object') {
     const w = raw.wah as Record<string, unknown>
     coerced.wah = { enabled: b(w.enabled, false), pedal: n(w.pedal, 50) }
   }
