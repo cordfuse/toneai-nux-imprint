@@ -71,8 +71,8 @@ npx tsx src/qr-generator.ts ./output/preset.json
 
 The generator writes a decorated PNG to `./output/<slug>.png` and prints the full path to stdout.
 
-**Step 3 — report:**
-Tell the user the output path and say "Scan it in the NUX app."
+**Step 3 — display and report:**
+Display the QR code image inline using the Read tool on the output PNG path. Then say "Scan it in the NUX app."
 
 **Step 4 — cleanup:**
 ```bash
