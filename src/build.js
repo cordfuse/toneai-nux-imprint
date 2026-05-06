@@ -3,7 +3,7 @@
 /**
  * build.js
  *
- * Builds a clean production-ready copy of the IronBound app into ./dist/.
+ * Builds a clean production-ready copy of the Imprint app into ./dist/.
  * Used by both the developer (local testing) and the release CI workflow.
  *
  * Output mirrors exactly what end users receive in the ZIP download.

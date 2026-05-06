@@ -1,6 +1,6 @@
-# IronBound Setup Guide
+# Imprint Setup Guide
 
-This is a guided walkthrough for setting up your IronBound app. The agent walks you through each step conversationally. Estimated time: ~10 minutes.
+This is a guided walkthrough for setting up your Imprint app. The agent walks you through each step conversationally. Estimated time: ~10 minutes.
 
 ---
 

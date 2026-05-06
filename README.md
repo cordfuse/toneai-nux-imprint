@@ -111,4 +111,4 @@ Bass players: BassMate amp, TR212Pro cab, compressor always on.
 
 ---
 
-<sub>Built on [IronBound](https://github.com/cordfuse/imprint)</sub>
+<sub>Built on [Imprint](https://github.com/cordfuse/imprint)</sub>

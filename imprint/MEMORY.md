@@ -7,14 +7,14 @@ enabled:
   - session # Current album/song in progress, current device
 ```
 
-## CRITICAL: Use IronBound Memory, NOT Agent Native Memory
+## CRITICAL: Use Imprint Memory, NOT Agent Native Memory
 
-**NEVER use the agent's built-in memory system.** Do not write to Claude's `~/.claude/` memory, Gemini's memory, or any other agent-native storage. All persistent memory MUST be written to and read from the IronBound memory files listed below.
+**NEVER use the agent's built-in memory system.** Do not write to Claude's `~/.claude/` memory, Gemini's memory, or any other agent-native storage. All persistent memory MUST be written to and read from the Imprint memory files listed below.
 
 ### File Paths
 
 ```
-~/.imprint/memory.md                              # User scope (all IronBound apps)
+~/.imprint/memory.md                              # User scope (all Imprint apps)
 ~/.imprint/toneai-nux-qr/memory.md               # App scope (this app only)
 ~/.imprint/toneai-nux-qr/{session-id}/memory.md  # Session scope (this session)
 ```

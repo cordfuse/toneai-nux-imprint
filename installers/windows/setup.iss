@@ -1,6 +1,6 @@
 #define MyAppName "toneai-setup"
 #define MyAppPublisher "Steve Krisjanovs"
-#define MyAppURL "https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound"
+#define MyAppURL "https://github.com/steve-krisjanovs/toneai-nux-qr-imprint"
 #define MyAppExeName "toneai-setup.exe"
 
 [Setup]

@@ -1,9 +1,9 @@
 <!-- IMPRINT — https://github.com/cordfuse/imprint -->
 <!-- Version is defined in version.txt -->
-<!-- WARNING: This file is the engine for your AI agent. Do NOT modify unless you are an IronBound developer. -->
+<!-- WARNING: This file is the engine for your AI agent. Do NOT modify unless you are an Imprint developer. -->
 <!-- Checksum: NONE (dev build — run release workflow to generate) -->
 
-# IronBound Engine
+# Imprint Engine
 
 At session start, read every `.md` file in the `./imprint/` directory. Those files define your identity, permissions, constraints, welcome flow, redirect response, session mode, and memory configuration. Follow them exactly.
 
@@ -22,7 +22,7 @@ The `./imprint/` directory is the app definition. This file is the engine that l
 7. Execute welcome flow from `WELCOME.md`
 8. Use redirect response from `REDIRECT.md` for denied requests
 
-If any file is missing, refuse to start and inform the user that the IronBound configuration is incomplete.
+If any file is missing, refuse to start and inform the user that the Imprint configuration is incomplete.
 
 ---
 
@@ -41,7 +41,7 @@ In dev mode:
 
 ## Architecture Notes
 
-ToneAI is the canonical reference implementation of an IronBound app. It demonstrates a locked AI persona with custom tooling, scoped file access, and multi-session design.
+ToneAI is the canonical reference implementation of an Imprint app. It demonstrates a locked AI persona with custom tooling, scoped file access, and multi-session design.
 
 - **This file** (`IMPRINT-USER.md` in the repo, `IMPRINT.md` in production) — The engine. At build time, stripped of dev mode and output as `IMPRINT.md` in `dist/`, with agent files synced from it.
 - **`./imprint/`** directory — The ToneAI app definition.
@@ -90,7 +90,7 @@ toneai-nux-qr-imprint/
     WELCOME.md          # Welcome flow — shortcut, device check, onboarding
     REDIRECT.md         # "Let's stay on the fretboard!"
     SESSION.md          # mode: multi, cwd: fixed
-    MEMORY.md           # IronBound memory (~/.imprint/toneai-nux-qr/)
+    MEMORY.md           # Imprint memory (~/.imprint/toneai-nux-qr/)
     icon.svg            # Guitar app icon
     agents/             # Per-agent permission configs
   src/
