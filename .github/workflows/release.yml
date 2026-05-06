@@ -6,8 +6,8 @@ name: Release
 #   - install.sh / install.ps1                 (pipe-installer bootstrap, stable name)
 #   - toneai-setup.ts                           (TypeScript setup wizard, stable name)
 #   - toneai-source.zip                         (lean desktop bundle, stable name)
-#   - toneai-nux-qr-ironbound-desktop-v*.zip   (lean desktop, runtime npm install)
-#   - toneai-nux-qr-ironbound-v*.zip           (full ZIP, ~27MB, mobile-compatible)
+#   - toneai-nux-qr-imprint-desktop-v*.zip   (lean desktop, runtime npm install)
+#   - toneai-nux-qr-imprint-v*.zip           (full ZIP, ~27MB, mobile-compatible)
 #   - toneai-setup-{linux-x64,win-x64.exe,mac-arm64,mac-x64}  (Bun-compiled binaries)
 #   - toneai-setup.exe                          (Inno Setup Windows installer)
 #   - toneai-setup-{VERSION}-macos.pkg          (macOS pkg)
@@ -273,12 +273,12 @@ jobs:
 
             **macOS / Linux:**
             ```
-            curl -fsSL https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound/releases/latest/download/install.sh | bash
+            curl -fsSL https://github.com/steve-krisjanovs/toneai-nux-qr-imprint/releases/latest/download/install.sh | bash
             ```
 
             **Windows (PowerShell):**
             ```
-            irm https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound/releases/latest/download/install.ps1 | iex
+            irm https://github.com/steve-krisjanovs/toneai-nux-qr-imprint/releases/latest/download/install.ps1 | iex
             ```
 
             One-liner. Installs Bun if missing, fetches the setup wizard, downloads ToneAI into `~/toneai`, prints how to launch it. No signed-installer permissions, no manual download, always picks up the latest release.
@@ -309,7 +309,7 @@ jobs:
 
             ### Path 2 — Desktop CLI (developers)
 
-            Download `toneai-nux-qr-ironbound-desktop-v${{ steps.version.outputs.VERSION }}.zip`, extract, open the folder in any supported agent CLI, say hello — ToneAI handles the rest. First launch installs `node_modules` automatically.
+            Download `toneai-nux-qr-imprint-desktop-v${{ steps.version.outputs.VERSION }}.zip`, extract, open the folder in any supported agent CLI, say hello — ToneAI handles the rest. First launch installs `node_modules` automatically.
 
             **Supported agents (any desktop OS — Mac, Windows, Linux):**
 
@@ -418,17 +418,17 @@ jobs:
 
           class ToneaiSetup < Formula
             desc "Setup wizard for ToneAI — AI-powered NUX MightyAmp tone assistant"
-            homepage "https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound"
+            homepage "https://github.com/steve-krisjanovs/toneai-nux-qr-imprint"
             version "VERSION_PLACEHOLDER"
             license "MIT"
 
             on_macos do
               on_arm do
-                url "https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound/releases/download/TAG_PLACEHOLDER/toneai-setup-mac-arm64"
+                url "https://github.com/steve-krisjanovs/toneai-nux-qr-imprint/releases/download/TAG_PLACEHOLDER/toneai-setup-mac-arm64"
                 sha256 "ARM64_PLACEHOLDER"
               end
               on_intel do
-                url "https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound/releases/download/TAG_PLACEHOLDER/toneai-setup-mac-x64"
+                url "https://github.com/steve-krisjanovs/toneai-nux-qr-imprint/releases/download/TAG_PLACEHOLDER/toneai-setup-mac-x64"
                 sha256 "X64_PLACEHOLDER"
               end
             end

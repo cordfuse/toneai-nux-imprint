@@ -22,7 +22,7 @@ Maintainer: Steve Krisjanovs <steve.krisjanovs@gmail.com>
 Description: Setup wizard for ToneAI NUX MightyAmp tone assistant
  ToneAI builds NUX MightyAmp presets from artist/song descriptions using AI.
  This wizard downloads ToneAI and installs all required dependencies.
- Homepage: https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound
+ Homepage: https://github.com/steve-krisjanovs/toneai-nux-qr-imprint
 EOF
 
 dpkg-deb --build "$PKG_DIR" "$DIST_DIR/toneai-setup_${VERSION}_amd64.deb"

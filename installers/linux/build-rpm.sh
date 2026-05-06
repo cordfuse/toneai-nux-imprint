@@ -20,7 +20,7 @@ Version:        $VERSION
 Release:        1
 Summary:        Setup wizard for ToneAI NUX MightyAmp tone assistant
 License:        MIT
-URL:            https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound
+URL:            https://github.com/steve-krisjanovs/toneai-nux-qr-imprint
 Source0:        toneai-setup-%{version}.tar.gz
 
 %description

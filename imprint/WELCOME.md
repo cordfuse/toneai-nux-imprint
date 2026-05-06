@@ -8,7 +8,7 @@ On the first interaction of a new session, perform the following steps in order:
 
 ### Check for installer flag
 
-If `~/.ironbound/toneai-nux-qr/.installed` exists, the app was installed via a platform installer. Skip:
+If `~/.imprint/toneai-nux-qr/.installed` exists, the app was installed via a platform installer. Skip:
 - Node.js check (installer handled it)
 - Desktop shortcut creation (installer handled it)
 - Go straight to greeting
@@ -19,23 +19,23 @@ Write the agent's PID to a file so installers can gracefully terminate during up
 
 macOS / Linux:
 ```bash
-mkdir -p ~/.ironbound/toneai-nux-qr
-echo $PPID > ~/.ironbound/toneai-nux-qr/.pid
+mkdir -p ~/.imprint/toneai-nux-qr
+echo $PPID > ~/.imprint/toneai-nux-qr/.pid
 ```
 
 Windows:
 ```powershell
 $agentPid = (Get-Process -Id $PID).Parent.Id
-$agentPid | Out-File "$env:USERPROFILE\.ironbound\toneai-nux-qr\.pid"
+$agentPid | Out-File "$env:USERPROFILE\.imprint\toneai-nux-qr\.pid"
 ```
 
 This runs silently on every session start.
 
 ### Singleton mode enforcement (if mode: singleton)
 
-Read `ironbound/SESSION.md`. If `mode: singleton`:
+Read `imprint/SESSION.md`. If `mode: singleton`:
 
-1. Check lock file at `~/.ironbound/toneai-nux-qr/.lock`
+1. Check lock file at `~/.imprint/toneai-nux-qr/.lock`
 2. If lock exists:
    a. Read PID from lock
    b. Check if PID is still running (`kill -0` on unix, `Get-Process` on Windows)
@@ -48,7 +48,7 @@ If `mode: multi` → skip this check entirely.
 
 ### Check for updates (if enabled)
 
-Read `ironbound/SESSION.md` and check if `update.enabled` is true. If so:
+Read `imprint/SESSION.md` and check if `update.enabled` is true. If so:
 
 1. Skip if `.installed` flag exists (installer owns update lifecycle)
 2. Skip if Homebrew manages the install (check for `/opt/homebrew/Cellar/toneai-nux-qr` or `/usr/local/Cellar/toneai-nux-qr`)
@@ -104,8 +104,8 @@ Never rely on PATH to resolve the agent CLI. Store the full binary path at first
 macOS / Linux:
 ```bash
 AGENT_BIN=$(which <agent>)
-mkdir -p ~/.ironbound/toneai-nux-qr
-echo '{"agent": "<agent>", "bin": "'$AGENT_BIN'"}' > ~/.ironbound/toneai-nux-qr/config.json
+mkdir -p ~/.imprint/toneai-nux-qr
+echo '{"agent": "<agent>", "bin": "'$AGENT_BIN'"}' > ~/.imprint/toneai-nux-qr/config.json
 ```
 
 The desktop shortcut launch command and all subsequent invocations should use the stored path from `config.json` rather than the agent name directly.
@@ -117,7 +117,7 @@ The desktop shortcut launch command and all subsequent invocations should use th
 
 ### Check permissions mode
 
-Read `ironbound/SESSION.md` and parse the `permissions` field from the YAML block. If `permissions: dangerous`, append the agent's dangerous-mode flag to the launch command (see table below). If `sandboxed` or unset, launch normally.
+Read `imprint/SESSION.md` and parse the `permissions` field from the YAML block. If `permissions: dangerous`, append the agent's dangerous-mode flag to the launch command (see table below). If `sandboxed` or unset, launch normally.
 
 ### Build the launch command
 
@@ -150,7 +150,7 @@ These values are used for smart versioning (see below).
 
 ### App icon
 
-The app icon is at `ironbound/icon.svg`. Resolve to absolute path.
+The app icon is at `imprint/icon.svg`. Resolve to absolute path.
 
 ### Smart shortcut versioning
 
@@ -228,7 +228,7 @@ Then `chmod +x` the launch script.
 
 4. Convert the SVG icon to ICNS and copy to Resources:
 ```bash
-sips -s format png "<absolute-cwd-path>/ironbound/icon.svg" --out /tmp/app-icon.png 2>/dev/null
+sips -s format png "<absolute-cwd-path>/imprint/icon.svg" --out /tmp/app-icon.png 2>/dev/null
 mkdir -p /tmp/app.iconset
 for size in 16 32 64 128 256 512; do
     sips -z $size $size /tmp/app-icon.png --out /tmp/app.iconset/icon_${size}x${size}.png 2>/dev/null
@@ -252,7 +252,7 @@ Type=Application
 Name=ToneAI
 Exec=bash -c 'cd "<absolute-cwd-path>" && <agent> "hello"'
 Terminal=true
-Icon=<absolute-path-to-ironbound/icon.svg>
+Icon=<absolute-path-to-imprint/icon.svg>
 X-IronBound-Version=<version>
 X-IronBound-Path=<absolute-cwd-path>
 ```
@@ -279,7 +279,7 @@ which node 2>/dev/null || echo "NOT_FOUND"
 
 If Node.js is installed, skip to the next step.
 
-If missing, install a portable copy to `~/.ironbound/node/`. **Ask the user first:**
+If missing, install a portable copy to `~/.imprint/node/`. **Ask the user first:**
 
 > **ToneAI**: I need Node.js to run some tools. It's not installed on your system — want me to install a portable copy? It won't touch your system files. (~50MB download)
 
@@ -292,8 +292,8 @@ OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
 [ "$ARCH" = "x86_64" ] && ARCH="x64"
 NODE_VERSION="v22.12.0"
-mkdir -p ~/.ironbound/node
-curl -fsSL "https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-${OS}-${ARCH}.tar.xz" | tar -xJ --strip-components=1 -C ~/.ironbound/node
+mkdir -p ~/.imprint/node
+curl -fsSL "https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-${OS}-${ARCH}.tar.xz" | tar -xJ --strip-components=1 -C ~/.imprint/node
 ```
 
 For Windows (PowerShell):
@@ -301,11 +301,11 @@ For Windows (PowerShell):
 $arch = if ([System.Environment]::Is64BitOperatingSystem) { "x64" } else { "x86" }
 $version = "v22.12.0"
 Invoke-WebRequest "https://nodejs.org/dist/$version/node-$version-win-$arch.zip" -OutFile "$env:TEMP\node.zip"
-Expand-Archive "$env:TEMP\node.zip" -DestinationPath "$env:USERPROFILE\.ironbound\node" -Force
+Expand-Archive "$env:TEMP\node.zip" -DestinationPath "$env:USERPROFILE\.imprint\node" -Force
 Remove-Item "$env:TEMP\node.zip"
 ```
 
-After installing, prepend to PATH: `export PATH="$HOME/.ironbound/node/bin:$PATH"`
+After installing, prepend to PATH: `export PATH="$HOME/.imprint/node/bin:$PATH"`
 
 The desktop shortcut's launch script should also prepend this path.
 

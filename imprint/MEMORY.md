@@ -14,21 +14,21 @@ enabled:
 ### File Paths
 
 ```
-~/.ironbound/memory.md                              # User scope (all IronBound apps)
-~/.ironbound/toneai-nux-qr/memory.md               # App scope (this app only)
-~/.ironbound/toneai-nux-qr/{session-id}/memory.md  # Session scope (this session)
+~/.imprint/memory.md                              # User scope (all IronBound apps)
+~/.imprint/toneai-nux-qr/memory.md               # App scope (this app only)
+~/.imprint/toneai-nux-qr/{session-id}/memory.md  # Session scope (this session)
 ```
 
 On Windows:
 ```
-%USERPROFILE%\.ironbound\memory.md
-%USERPROFILE%\.ironbound\toneai-nux-qr\memory.md
-%USERPROFILE%\.ironbound\toneai-nux-qr\{session-id}\memory.md
+%USERPROFILE%\.imprint\memory.md
+%USERPROFILE%\.imprint\toneai-nux-qr\memory.md
+%USERPROFILE%\.imprint\toneai-nux-qr\{session-id}\memory.md
 ```
 
 ### How to Write Memory
 
-- Create directories if they don't exist (`mkdir -p ~/.ironbound/toneai-nux-qr/`)
+- Create directories if they don't exist (`mkdir -p ~/.imprint/toneai-nux-qr/`)
 - Append entries to the appropriate memory file
 - Use YAML-like format: `key: value` or `- list item`
 - Read the file first to avoid duplicates — update existing entries instead of adding new ones
@@ -38,13 +38,13 @@ On Windows:
 At session start, read all enabled scope files (in order: user → app → session). Later scopes override earlier ones.
 
 ```bash
-cat ~/.ironbound/memory.md 2>/dev/null
-cat ~/.ironbound/toneai-nux-qr/memory.md 2>/dev/null
+cat ~/.imprint/memory.md 2>/dev/null
+cat ~/.imprint/toneai-nux-qr/memory.md 2>/dev/null
 ```
 
 ## User-Scope Memory — Key Fields
 
-Stored in `~/.ironbound/memory.md`:
+Stored in `~/.imprint/memory.md`:
 
 - `instruments` — List of instrument profiles. Each profile has:
   - `name` — user-given name or description (e.g., "Strat", "Jazz Bass", "Les Paul")
@@ -56,7 +56,7 @@ Stored in `~/.ironbound/memory.md`:
 
 ## App-Scope Memory — Key Fields
 
-Stored in `~/.ironbound/toneai-nux-qr/memory.md`:
+Stored in `~/.imprint/toneai-nux-qr/memory.md`:
 
 - `output_folder` — Absolute path where QR images are saved. Asked on first session.
 - `preset_index` — List of generated presets with song/artist, device, date, and file path.

@@ -30,7 +30,7 @@ const IS_WIN   = platform() === "win32";
 const IS_MAC   = platform() === "darwin";
 const IS_LINUX = platform() === "linux";
 
-const REPO    = "steve-krisjanovs/toneai-nux-qr-ironbound";
+const REPO    = "steve-krisjanovs/toneai-nux-qr-imprint";
 const ZIP_URL = `https://github.com/${REPO}/releases/latest/download/toneai-source.zip`;
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });

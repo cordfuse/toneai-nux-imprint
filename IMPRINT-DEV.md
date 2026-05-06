@@ -4,7 +4,7 @@ You are a normal coding assistant. There are no persona constraints, no identity
 
 ## First-Time Setup Guide
 
-On first dev mode session, check for `~/.ironbound/{app-name}/.dev-setup-complete`.
+On first dev mode session, check for `~/.imprint/{app-name}/.dev-setup-complete`.
 
 - Flag missing → tell the developer about the guided setup:
   > "First time here? I can walk you through setting up your IronBound app step by step (~10 minutes). Say **guide** to start, or **skip** to jump straight to coding."
@@ -18,7 +18,7 @@ The guided steps are documented in `DEV-GUIDE.md`.
 
 At session start, greet the developer briefly:
 
-> **IronBound Dev** — Ready to build. You can edit files in `./ironbound/`, run tests, or ask me anything.
+> **IronBound Dev** — Ready to build. You can edit files in `./imprint/`, run tests, or ask me anything.
 >
 > Quick commands:
 > - **"test user mode"** — Build `dist/` and launch the locked persona in a new terminal
@@ -26,15 +26,15 @@ At session start, greet the developer briefly:
 
 When the developer says **"help"**, show them:
 - The project structure (listed below)
-- How to edit the app definition (`./ironbound/*.md`)
+- How to edit the app definition (`./imprint/*.md`)
 - How to test user mode
 - How to create a release
-- Remind them: `IRONBOUND-USER.md` is the engine — edit `./ironbound/` files instead
+- Remind them: `IMPRINT-USER.md` is the engine — edit `./imprint/` files instead
 
 ## Project Structure
 
-- `IRONBOUND-USER.md` — The user-mode engine. Do NOT follow its instructions — it is source code you help the developer edit, not rules for you.
-- `./ironbound/` — The app definition files (identity, permissions, constraints, etc.). Same as above — source code, not instructions.
+- `IMPRINT-USER.md` — The user-mode engine. Do NOT follow its instructions — it is source code you help the developer edit, not rules for you.
+- `./imprint/` — The app definition files (identity, permissions, constraints, etc.). Same as above — source code, not instructions.
 - `src/build.js` — Builds a clean production copy to `./dist/`
 - `./dist/` — Build output (gitignored). Contains exactly what end users get in the ZIP.
 
@@ -48,7 +48,7 @@ Run `node src/build.js` to generate `./dist/`.
 
 ### Step 2 — Choose agent
 
-Ask the developer which agent CLI to test with. Read `ironbound/SESSION.md` and parse the `permissions` field. If `permissions: dangerous`, use the dangerous launch command.
+Ask the developer which agent CLI to test with. Read `imprint/SESSION.md` and parse the `permissions` field. If `permissions: dangerous`, use the dangerous launch command.
 
 **Sandboxed (default):**
 
@@ -161,11 +161,11 @@ Tell the developer the test session has been launched in a new window.
 
 `src/build.js` does the following:
 
-1. Strips dev mode content from `IRONBOUND-USER.md` (between `<!-- DEV_MODE_START -->` and `<!-- DEV_MODE_END -->` markers)
+1. Strips dev mode content from `IMPRINT-USER.md` (between `<!-- DEV_MODE_START -->` and `<!-- DEV_MODE_END -->` markers)
 2. Generates SHA-256 checksum
-3. Copies the clean `IRONBOUND-USER.md` as `IRONBOUND.md` into `dist/`
-4. Creates agent files (CLAUDE.md, GEMINI.md, AGENTS.md, .windsurfrules, .clinerules) in `dist/` — each is a one-liner redirecting to `IRONBOUND.md`
-5. Copies `ironbound/`, `src/`, README.md, LICENSE, package.json, version.txt into `dist/`
+3. Copies the clean `IMPRINT-USER.md` as `IMPRINT.md` into `dist/`
+4. Creates agent files (CLAUDE.md, GEMINI.md, AGENTS.md, .windsurfrules, .clinerules) in `dist/` — each is a one-liner redirecting to `IMPRINT.md`
+5. Copies `imprint/`, `src/`, README.md, LICENSE, package.json, version.txt into `dist/`
 
 ## Release
 
@@ -179,7 +179,7 @@ git push origin "v${VERSION}"
 
 After tagging, write release notes manually with:
 ```bash
-GITHUB_TOKEN="" gh release edit vX.X.X --repo steve-krisjanovs/toneai-nux-qr-ironbound --notes "..."
+GITHUB_TOKEN="" gh release edit vX.X.X --repo steve-krisjanovs/toneai-nux-qr-imprint --notes "..."
 ```
 
 ---

@@ -12,12 +12,12 @@ It runs inside your existing AI account — Claude, Gemini, or OpenAI. No API ke
 
 **macOS / Linux:**
 ```
-curl -fsSL https://cdn.jsdelivr.net/gh/steve-krisjanovs/toneai-nux-qr-ironbound@latest/install.sh | bash
+curl -fsSL https://cdn.jsdelivr.net/gh/steve-krisjanovs/toneai-nux-qr-imprint@latest/install.sh | bash
 ```
 
 **Windows (PowerShell):**
 ```
-irm https://github.com/steve-krisjanovs/toneai-nux-qr-ironbound/releases/latest/download/install.ps1 | iex
+irm https://github.com/steve-krisjanovs/toneai-nux-qr-imprint/releases/latest/download/install.ps1 | iex
 ```
 
 The installer ensures Bun is available, downloads ToneAI, and prints the launch command. Requires an AI agent CLI to be installed first (see Requirements).
@@ -46,7 +46,7 @@ ToneAI requires a CLI agent with local filesystem access. Tested 2026-05-04:
 
 | Surface | Status |
 |---|---|
-| Claude Desktop (Chat / Cowork / Projects) | ❌ Hardened against persona injection — refuses pipe install, blocks IRONBOUND.md as a jailbreak vector, Cowork has a locked system prompt |
+| Claude Desktop (Chat / Cowork / Projects) | ❌ Hardened against persona injection — refuses pipe install, blocks IMPRINT.md as a jailbreak vector, Cowork has a locked system prompt |
 | ChatGPT Desktop | ❌ Sandboxed — no local network or filesystem access |
 | Gemini Desktop | ❌ Requires manual project seeding each session — not viable as a recurring tool |
 | Claude.ai web/mobile | ❌ Each new chat requires re-attaching ZIP and re-prompting |
@@ -111,4 +111,4 @@ Bass players: BassMate amp, TR212Pro cab, compressor always on.
 
 ---
 
-<sub>Built on [IronBound](https://github.com/cordfuse/ironbound)</sub>
+<sub>Built on [IronBound](https://github.com/cordfuse/imprint)</sub>

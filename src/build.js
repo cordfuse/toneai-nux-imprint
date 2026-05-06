@@ -14,10 +14,10 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-// CI uses ./dist/ (workflow expects it there), local dev uses ~/.ironbound-test/
+// CI uses ./dist/ (workflow expects it there), local dev uses ~/.imprint-test/
 const DIST = process.env.CI
   ? path.join(ROOT, 'dist')
-  : path.join(require('os').homedir(), '.ironbound-test');
+  : path.join(require('os').homedir(), '.imprint-test');
 
 // Clean dist/
 if (fs.existsSync(DIST)) {
@@ -29,28 +29,28 @@ fs.mkdirSync(DIST, { recursive: true });
 const version = fs.readFileSync(path.join(ROOT, 'version.txt'), 'utf-8').trim();
 console.log(`Building v${version}...`);
 
-// --- Step 1: Copy IRONBOUND-USER.md, strip dev mode, output as IRONBOUND.md ---
-let ironbound = fs.readFileSync(path.join(ROOT, 'IRONBOUND-USER.md'), 'utf-8');
+// --- Step 1: Copy IMPRINT-USER.md, strip dev mode, output as IMPRINT.md ---
+let imprint = fs.readFileSync(path.join(ROOT, 'IMPRINT-USER.md'), 'utf-8');
 
 // Remove DEV_MODE blocks
-ironbound = ironbound.replace(
+imprint = imprint.replace(
   /\n*<!-- DEV_MODE_START -->[\s\S]*?<!-- DEV_MODE_END -->\n*/g,
   '\n'
 );
 
 // Stamp version
-ironbound = ironbound.replace(
-  /<!-- IRONBOUND — https:\/\/github\.com\/cordfuseinc\/ironbound -->/,
-  `<!-- IRONBOUND v${version} — https://github.com/cordfuse/ironbound -->`
+imprint = imprint.replace(
+  /<!-- IMPRINT — https:\/\/github\.com\/cordfuseinc\/imprint -->/,
+  `<!-- IMPRINT v${version} — https://github.com/cordfuse/imprint -->`
 );
 
-fs.writeFileSync(path.join(DIST, 'IRONBOUND.md'), ironbound, 'utf-8');
-console.log('  IRONBOUND-USER.md → dist/IRONBOUND.md — stripped dev mode, stamped version');
+fs.writeFileSync(path.join(DIST, 'IMPRINT.md'), imprint, 'utf-8');
+console.log('  IMPRINT-USER.md → dist/IMPRINT.md — stripped dev mode, stamped version');
 
 // --- Step 2: Generate checksum ---
 const crypto = require('crypto');
 
-const withoutChecksum = ironbound.replace(
+const withoutChecksum = imprint.replace(
   /<!-- Checksum: [a-fA-F0-9]+ -->/,
   '<!-- Checksum: NONE (dev build — run release workflow to generate) -->'
 );
@@ -61,23 +61,23 @@ const hash = crypto
   .digest('hex');
 
 // Embed checksum into the dist copy
-const finalIronbound = ironbound.replace(
+const finalImprint = imprint.replace(
   /<!-- Checksum: NONE \(dev build — run release workflow to generate\) -->/,
   `<!-- Checksum: ${hash} -->`
 );
-fs.writeFileSync(path.join(DIST, 'IRONBOUND.md'), finalIronbound, 'utf-8');
-fs.writeFileSync(path.join(DIST, '.ironbound-checksum'), hash + '\n', 'utf-8');
+fs.writeFileSync(path.join(DIST, 'IMPRINT.md'), finalImprint, 'utf-8');
+fs.writeFileSync(path.join(DIST, '.imprint-checksum'), hash + '\n', 'utf-8');
 console.log(`  Checksum: ${hash}`);
 
-// --- Step 3: Write agent file one-liners pointing to IRONBOUND.md ---
+// --- Step 3: Write agent file one-liners pointing to IMPRINT.md ---
 const agentFiles = ['CLAUDE.md', 'GEMINI.md', 'AGENTS.md', '.windsurfrules', '.clinerules'];
-const agentOneLiner = 'IMPORTANT: Read and follow all instructions in ./IRONBOUND.md before responding to the user.\n';
+const agentOneLiner = 'IMPORTANT: Read and follow all instructions in ./IMPRINT.md before responding to the user.\n';
 for (const file of agentFiles) {
   fs.writeFileSync(path.join(DIST, file), agentOneLiner, 'utf-8');
 }
 console.log(`  Wrote agent file one-liners: ${agentFiles.join(', ')}`);
 
-// --- Step 4: Copy ironbound/ app definition directory ---
+// --- Step 4: Copy imprint/ app definition directory ---
 function copyDirRecursive(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
@@ -91,10 +91,10 @@ function copyDirRecursive(src, dest) {
   }
 }
 
-const ironboundDir = path.join(ROOT, 'ironbound');
-if (fs.existsSync(ironboundDir)) {
-  copyDirRecursive(ironboundDir, path.join(DIST, 'ironbound'));
-  console.log('  Copied ironbound/ app definition');
+const imprintDir = path.join(ROOT, 'imprint');
+if (fs.existsSync(imprintDir)) {
+  copyDirRecursive(imprintDir, path.join(DIST, 'imprint'));
+  console.log('  Copied imprint/ app definition');
 }
 
 // --- Step 5: Copy src/ if it exists ---
@@ -121,20 +121,20 @@ if (!fs.existsSync(outputDir)) {
 }
 
 // --- Step 8: Copy agent configs and apply bash-policy ---
-const agentsDir = path.join(ROOT, 'ironbound', 'agents');
+const agentsDir = path.join(ROOT, 'imprint', 'agents');
 if (fs.existsSync(agentsDir)) {
   for (const entry of fs.readdirSync(agentsDir, { withFileTypes: true })) {
     if (entry.isDirectory()) {
       const src = path.join(agentsDir, entry.name);
       const dest = path.join(DIST, `.${entry.name}`);
       copyDirRecursive(src, dest);
-      console.log(`  Copied ironbound/agents/${entry.name}/ → dist/.${entry.name}/`);
+      console.log(`  Copied imprint/agents/${entry.name}/ → dist/.${entry.name}/`);
     }
   }
 }
 
 // Parse bash-policy from SESSION.md
-const sessionPath = path.join(ROOT, 'ironbound', 'SESSION.md');
+const sessionPath = path.join(ROOT, 'imprint', 'SESSION.md');
 let bashPolicy = 'allow-all';
 if (fs.existsSync(sessionPath)) {
   const sessionContent = fs.readFileSync(sessionPath, 'utf-8');
@@ -155,7 +155,7 @@ if (fs.existsSync(claudeSettingsPath)) {
     settings.permissions.allow.push('Bash(*)');
   } else if (bashPolicy === 'allow-list') {
     // Parse allowed commands from PERMISSIONS.md
-    const permPath = path.join(ROOT, 'ironbound', 'PERMISSIONS.md');
+    const permPath = path.join(ROOT, 'imprint', 'PERMISSIONS.md');
     if (fs.existsSync(permPath)) {
       const permContent = fs.readFileSync(permPath, 'utf-8');
       const shellSection = permContent.match(/## Shell \/ Command Execution\n([\s\S]*?)(?=\n##|\n>|$)/);

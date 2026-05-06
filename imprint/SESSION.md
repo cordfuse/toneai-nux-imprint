@@ -7,7 +7,7 @@ permissions: sandboxed
 bash-policy: allow-all
 update:
   enabled: true
-  repo: steve-krisjanovs/toneai-nux-qr-ironbound
+  repo: steve-krisjanovs/toneai-nux-qr-imprint
   check: on-session-start
 ```
 

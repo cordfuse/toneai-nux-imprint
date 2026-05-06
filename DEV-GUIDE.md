@@ -6,18 +6,18 @@ This is a guided walkthrough for setting up your IronBound app. The agent walks 
 
 ## Step 1 — Name your app
 
-Pick a name for your agent. This name will appear in greetings, desktop shortcuts, error messages, and the `~/.ironbound/{app-name}/` directory.
+Pick a name for your agent. This name will appear in greetings, desktop shortcuts, error messages, and the `~/.imprint/{app-name}/` directory.
 
-- Update `ironbound/IDENTITY.md` with the chosen name
-- Replace all `[Your App Name]` placeholders in `ironbound/WELCOME.md`
-- Replace all `{app-name}` placeholders across the `ironbound/` directory with a lowercase, hyphenated slug (e.g., `my-cool-app`)
+- Update `imprint/IDENTITY.md` with the chosen name
+- Replace all `[Your App Name]` placeholders in `imprint/WELCOME.md`
+- Replace all `{app-name}` placeholders across the `imprint/` directory with a lowercase, hyphenated slug (e.g., `my-cool-app`)
 
 ## Step 2 — Define purpose and personality
 
 What does your agent do? What tone should it use? Friendly? Professional? Terse?
 
-- Update `ironbound/IDENTITY.md` with the agent's purpose, personality, and tone
-- Update `ironbound/REDIRECT.md` with a refusal message that matches the personality
+- Update `imprint/IDENTITY.md` with the agent's purpose, personality, and tone
+- Update `imprint/REDIRECT.md` with a refusal message that matches the personality
 
 ## Step 3 — Set permissions
 
@@ -27,18 +27,18 @@ What should your agent be allowed to do? Think about:
 - Does it need network access? To which endpoints?
 - Does it need any MCP tools?
 
-- Update `ironbound/PERMISSIONS.md` with the whitelist of allowed operations
+- Update `imprint/PERMISSIONS.md` with the whitelist of allowed operations
 
 ## Step 4 — Review constraints
 
-The default `ironbound/CONSTRAINTS.md` has a comprehensive blacklist. Review it and add any app-specific restrictions. Never remove existing constraints — only add to them.
+The default `imprint/CONSTRAINTS.md` has a comprehensive blacklist. Review it and add any app-specific restrictions. Never remove existing constraints — only add to them.
 
 ## Step 5 — Design the welcome flow
 
 What should happen when a user starts a session?
 
-- Update `ironbound/WELCOME.md` with your greeting message
-- Customize the shortcut name and icon (`ironbound/icon.svg`)
+- Update `imprint/WELCOME.md` with your greeting message
+- Customize the shortcut name and icon (`imprint/icon.svg`)
 - Decide if you need Node.js tooling for the user
 
 ## Step 6 — Configure session mode
@@ -48,13 +48,13 @@ What should happen when a user starts a session?
 - `sandboxed` or `dangerous`? (Should the agent ask for permission, or auto-approve everything?)
 - Do you want update checking enabled?
 
-- Update `ironbound/SESSION.md` with your choices
+- Update `imprint/SESSION.md` with your choices
 
 ## Step 7 — Configure memory
 
 What should your agent remember across sessions?
 
-- Update `ironbound/MEMORY.md` with memory scopes and write rules
+- Update `imprint/MEMORY.md` with memory scopes and write rules
 
 ## Step 8 — Test user mode (demo)
 
