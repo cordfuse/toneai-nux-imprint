@@ -12,12 +12,12 @@ It runs inside your existing AI account — Claude, Gemini, or OpenAI. No API ke
 
 **macOS / Linux:**
 ```
-curl -fsSL https://cdn.jsdelivr.net/gh/steve-krisjanovs/toneai-nux-qr-imprint@latest/install.sh | bash
+curl -fsSL https://cdn.jsdelivr.net/gh/steve-krisjanovs/toneai-nux@latest/install.sh | bash
 ```
 
 **Windows (PowerShell):**
 ```
-irm https://github.com/steve-krisjanovs/toneai-nux-qr-imprint/releases/latest/download/install.ps1 | iex
+irm https://github.com/steve-krisjanovs/toneai-nux/releases/latest/download/install.ps1 | iex
 ```
 
 The installer ensures Bun is available, downloads ToneAI, and prints the launch command. Requires an AI agent CLI to be installed first (see Requirements).

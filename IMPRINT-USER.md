@@ -81,7 +81,7 @@ The generator handles coercion of missing or malformed fields automatically.
 ### Project Structure
 
 ```
-toneai-nux-qr-imprint/
+toneai-nux/
   IMPRINT.md          # Engine (this file)
   imprint/            # App definition (ToneAI persona)
     IDENTITY.md         # ToneAI identity and personality

@@ -30,7 +30,7 @@ const IS_WIN   = platform() === "win32";
 const IS_MAC   = platform() === "darwin";
 const IS_LINUX = platform() === "linux";
 
-const REPO    = "steve-krisjanovs/toneai-nux-qr-imprint";
+const REPO    = "steve-krisjanovs/toneai-nux";
 const ZIP_URL = `https://github.com/${REPO}/releases/latest/download/toneai-source.zip`;
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -137,7 +137,7 @@ async function installNode(): Promise<boolean> {
 async function main() {
   console.clear();
   console.log();
-  console.log(`${c.bold}${c.white}  ToneAI Setup${c.reset}`);
+  console.log(`${c.bold}${c.white}  ToneAI-NUX${c.reset}`);
   console.log(`  ${dim("AI-powered NUX MightyAmp tone assistant — no API key required")}`);
   console.log();
   console.log("  This wizard will get you running in a few minutes.");

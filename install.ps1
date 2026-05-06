@@ -1,7 +1,7 @@
 # ToneAI installer — Windows (PowerShell)
 #
 # Usage:
-#   irm https://github.com/steve-krisjanovs/toneai-nux-qr-imprint/releases/latest/download/install.ps1 | iex
+#   irm https://github.com/steve-krisjanovs/toneai-nux/releases/latest/download/install.ps1 | iex
 #
 # What this does:
 #   1. Ensures Bun is installed (installs if missing)
@@ -10,9 +10,9 @@
 
 $ErrorActionPreference = "Stop"
 
-$Repo       = "steve-krisjanovs/toneai-nux-qr-imprint"
-$WizardUrl  = "https://github.com/$Repo/releases/latest/download/toneai-setup.ts"
-$WizardDir  = Join-Path $env:USERPROFILE ".toneai-setup"
+$Repo       = "steve-krisjanovs/toneai-nux"
+$WizardUrl  = "https://github.com/$Repo/releases/latest/download/toneai-nux.ts"
+$WizardDir  = Join-Path $env:USERPROFILE ".toneai-nux"
 $WizardPath = Join-Path $WizardDir "wizard.ts"
 
 # ── Banner ──────────────────────────────────────────────────────────────────
