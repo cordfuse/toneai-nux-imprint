@@ -273,12 +273,12 @@ jobs:
 
             **macOS / Linux:**
             ```
-            curl -fsSL https://github.com/steve-krisjanovs/toneai-nux/releases/latest/download/install.sh | bash
+            curl -fsSL https://github.com/steve-krisjanovs/toneai-nux-imprint/releases/latest/download/install.sh | bash
             ```
 
             **Windows (PowerShell):**
             ```
-            irm https://github.com/steve-krisjanovs/toneai-nux/releases/latest/download/install.ps1 | iex
+            irm https://github.com/steve-krisjanovs/toneai-nux-imprint/releases/latest/download/install.ps1 | iex
             ```
 
             One-liner. Installs Bun if missing, fetches the setup wizard, downloads ToneAI into `~/toneai`, prints how to launch it. No signed-installer permissions, no manual download, always picks up the latest release.
@@ -418,17 +418,17 @@ jobs:
 
           class ToneaiNux < Formula
             desc "Setup wizard for ToneAI — AI-powered NUX MightyAmp tone assistant"
-            homepage "https://github.com/steve-krisjanovs/toneai-nux"
+            homepage "https://github.com/steve-krisjanovs/toneai-nux-imprint"
             version "VERSION_PLACEHOLDER"
             license "MIT"
 
             on_macos do
               on_arm do
-                url "https://github.com/steve-krisjanovs/toneai-nux/releases/download/TAG_PLACEHOLDER/toneai-nux-mac-arm64"
+                url "https://github.com/steve-krisjanovs/toneai-nux-imprint/releases/download/TAG_PLACEHOLDER/toneai-nux-mac-arm64"
                 sha256 "ARM64_PLACEHOLDER"
               end
               on_intel do
-                url "https://github.com/steve-krisjanovs/toneai-nux/releases/download/TAG_PLACEHOLDER/toneai-nux-mac-x64"
+                url "https://github.com/steve-krisjanovs/toneai-nux-imprint/releases/download/TAG_PLACEHOLDER/toneai-nux-mac-x64"
                 sha256 "X64_PLACEHOLDER"
               end
             end
