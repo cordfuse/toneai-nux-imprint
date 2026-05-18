@@ -29,8 +29,8 @@ const IS_WIN   = platform() === "win32";
 const IS_MAC   = platform() === "darwin";
 const IS_LINUX = platform() === "linux";
 
-const REPO    = "steve-krisjanovs/toneai-nux";
-const ZIP_URL = `https://github.com/${REPO}/releases/latest/download/toneai-source.zip`;
+const REPO    = "steve-krisjanovs/toneai-nux-imprint";
+const ZIP_URL = `https://github.com/${REPO}/releases/latest/download/toneai-nux-imprint-source.zip`;
 
 // Bun's native prompt() reads the controlling TTY correctly even when this
 // wizard is launched via `curl ... | bash` → `exec bun wizard </dev/tty`.

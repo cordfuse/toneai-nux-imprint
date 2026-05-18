@@ -10,28 +10,28 @@ PKG_ROOT="$SCRIPT_DIR/pkgroot"
 rm -rf "$PKG_ROOT" "$DIST_DIR"
 mkdir -p "$PKG_ROOT/usr/local/bin" "$DIST_DIR"
 
-cp "$ROOT_DIR/toneai-nux-mac-arm64" "$PKG_ROOT/usr/local/bin/toneai-nux-arm64"
-cp "$ROOT_DIR/toneai-nux-mac-x64"   "$PKG_ROOT/usr/local/bin/toneai-nux-x64"
-chmod +x "$PKG_ROOT/usr/local/bin/toneai-nux-arm64"
-chmod +x "$PKG_ROOT/usr/local/bin/toneai-nux-x64"
+cp "$ROOT_DIR/toneai-nux-imprint-mac-arm64" "$PKG_ROOT/usr/local/bin/toneai-nux-imprint-arm64"
+cp "$ROOT_DIR/toneai-nux-imprint-mac-x64"   "$PKG_ROOT/usr/local/bin/toneai-nux-imprint-x64"
+chmod +x "$PKG_ROOT/usr/local/bin/toneai-nux-imprint-arm64"
+chmod +x "$PKG_ROOT/usr/local/bin/toneai-nux-imprint-x64"
 
-cat > "$PKG_ROOT/usr/local/bin/toneai-nux" << 'EOF'
+cat > "$PKG_ROOT/usr/local/bin/toneai-nux-imprint" << 'EOF'
 #!/bin/bash
 ARCH=$(uname -m)
 DIR="$(dirname "$(readlink -f "$0")")"
 if [ "$ARCH" = "arm64" ]; then
-  exec "$DIR/toneai-nux-arm64" "$@"
+  exec "$DIR/toneai-nux-imprint-arm64" "$@"
 else
-  exec "$DIR/toneai-nux-x64" "$@"
+  exec "$DIR/toneai-nux-imprint-x64" "$@"
 fi
 EOF
-chmod +x "$PKG_ROOT/usr/local/bin/toneai-nux"
+chmod +x "$PKG_ROOT/usr/local/bin/toneai-nux-imprint"
 
 pkgbuild \
   --root "$PKG_ROOT" \
-  --identifier "com.stevekrisjanovs.toneai-nux" \
+  --identifier "com.stevekrisjanovs.toneai-nux-imprint" \
   --version "$VERSION" \
   --install-location "/" \
-  "$DIST_DIR/toneai-nux-$VERSION-macos.pkg"
+  "$DIST_DIR/toneai-nux-imprint-$VERSION-macos.pkg"
 
-echo "Built: $DIST_DIR/toneai-nux-$VERSION-macos.pkg"
+echo "Built: $DIST_DIR/toneai-nux-imprint-$VERSION-macos.pkg"
