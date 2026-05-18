@@ -53,7 +53,7 @@ jobs:
       - name: Package desktop release (lean — no node_modules)
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
-          REPO_NAME="${{ github.event.repository.name }}"
+          REPO_NAME="toneai-nux"   # stable dist name, NOT the repo name — repo rename (→ toneai-nux-imprint) deliberately preserved binary/brew/zip names
           cd dist
           zip -r "../${REPO_NAME}-desktop-v${VERSION}.zip" .
 
@@ -64,14 +64,14 @@ jobs:
       - name: Package full release (with node_modules — mobile compatible)
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
-          REPO_NAME="${{ github.event.repository.name }}"
+          REPO_NAME="toneai-nux"   # stable dist name, NOT the repo name — repo rename (→ toneai-nux-imprint) deliberately preserved binary/brew/zip names
           cd dist
           zip -r "../${REPO_NAME}-v${VERSION}.zip" .
 
       - name: Stage pipe-installer assets (stable filenames for releases/latest/download/)
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
-          REPO_NAME="${{ github.event.repository.name }}"
+          REPO_NAME="toneai-nux"   # stable dist name, NOT the repo name — repo rename (→ toneai-nux-imprint) deliberately preserved binary/brew/zip names
           # Source ZIP — same content as desktop ZIP, stable filename (no version)
           cp "${REPO_NAME}-desktop-v${VERSION}.zip" toneai-source.zip
           # Wizard TypeScript source — fetched by install.sh / install.ps1
