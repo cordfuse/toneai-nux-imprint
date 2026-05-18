@@ -3,7 +3,6 @@ import { spawnSync } from "child_process";
 import { existsSync, mkdirSync, createWriteStream } from "fs";
 import { homedir, platform, tmpdir } from "os";
 import { join } from "path";
-import * as readline from "readline";
 import * as https from "https";
 
 // ── ANSI helpers ──────────────────────────────────────────────────────────────
@@ -33,10 +32,13 @@ const IS_LINUX = platform() === "linux";
 const REPO    = "steve-krisjanovs/toneai-nux";
 const ZIP_URL = `https://github.com/${REPO}/releases/latest/download/toneai-source.zip`;
 
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-
+// Bun's native prompt() reads the controlling TTY correctly even when this
+// wizard is launched via `curl ... | bash` → `exec bun wizard </dev/tty`.
+// node:readline's question() prints the prompt but never resolves on a
+// redirected-TTY stdin under Bun, freezing the installer at the first prompt.
 function ask(question: string): Promise<string> {
-  return new Promise(resolve => rl.question(question, resolve));
+  const answer = prompt(question);
+  return Promise.resolve(answer ?? "");
 }
 
 function run(cmd: string, args: string[], cwd?: string): boolean {
@@ -244,8 +246,6 @@ async function main() {
   console.log("  Tell ToneAI what song or artist you want to sound like.");
   console.log("  It builds the preset and saves a QR code you scan into your NUX app.");
   console.log();
-
-  rl.close();
 }
 
 main().catch(e => {
