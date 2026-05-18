@@ -4,11 +4,29 @@
 
 On the first interaction of a new session, perform the following steps in order:
 
+## Step 0 — One-time data directory migration
+
+Releases before v1.4.4 stored app data under `~/.imprint/toneai-nux-qr/` (a legacy name). The data directory is now `~/.imprint/toneai-nux-imprint/`. Before any other step, perform a one-time migration **silently** — never mention it to the user. It preserves device, instrument, output-folder, and preset-history data from prior installs and is idempotent (the old directory ceases to exist after the move, so it runs at most once).
+
+macOS / Linux:
+```bash
+if [ -d ~/.imprint/toneai-nux-qr ] && [ ! -d ~/.imprint/toneai-nux-imprint ]; then
+  mv ~/.imprint/toneai-nux-qr ~/.imprint/toneai-nux-imprint
+fi
+```
+
+Windows:
+```powershell
+$old = "$env:USERPROFILE\.imprint\toneai-nux-qr"
+$new = "$env:USERPROFILE\.imprint\toneai-nux-imprint"
+if ((Test-Path $old) -and -not (Test-Path $new)) { Move-Item $old $new }
+```
+
 ## Step 1 — Pre-flight checks
 
 ### Check for installer flag
 
-If `~/.imprint/toneai-nux-qr/.installed` exists, the app was installed via a platform installer. Skip:
+If `~/.imprint/toneai-nux-imprint/.installed` exists, the app was installed via a platform installer. Skip:
 - Node.js check (installer handled it)
 - Desktop shortcut creation (installer handled it)
 - Go straight to greeting
@@ -19,14 +37,14 @@ Write the agent's PID to a file so installers can gracefully terminate during up
 
 macOS / Linux:
 ```bash
-mkdir -p ~/.imprint/toneai-nux-qr
-echo $PPID > ~/.imprint/toneai-nux-qr/.pid
+mkdir -p ~/.imprint/toneai-nux-imprint
+echo $PPID > ~/.imprint/toneai-nux-imprint/.pid
 ```
 
 Windows:
 ```powershell
 $agentPid = (Get-Process -Id $PID).Parent.Id
-$agentPid | Out-File "$env:USERPROFILE\.imprint\toneai-nux-qr\.pid"
+$agentPid | Out-File "$env:USERPROFILE\.imprint\toneai-nux-imprint\.pid"
 ```
 
 This runs silently on every session start.
@@ -35,7 +53,7 @@ This runs silently on every session start.
 
 Read `imprint/SESSION.md`. If `mode: singleton`:
 
-1. Check lock file at `~/.imprint/toneai-nux-qr/.lock`
+1. Check lock file at `~/.imprint/toneai-nux-imprint/.lock`
 2. If lock exists:
    a. Read PID from lock
    b. Check if PID is still running (`kill -0` on unix, `Get-Process` on Windows)
@@ -51,7 +69,7 @@ If `mode: multi` → skip this check entirely.
 Read `imprint/SESSION.md` and check if `update.enabled` is true. If so:
 
 1. Skip if `.installed` flag exists (installer owns update lifecycle)
-2. Skip if Homebrew manages the install (check for `/opt/homebrew/Cellar/toneai-nux-qr` or `/usr/local/Cellar/toneai-nux-qr`)
+2. Skip if Homebrew manages the install (check for `/opt/homebrew/Cellar/toneai-nux-imprint` or `/usr/local/Cellar/toneai-nux-imprint`)
 3. Fetch latest version: `curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest` (timeout 5 seconds)
 4. Compare `tag_name` against local `version.txt`
 5. If newer version exists, ask the user:
@@ -104,8 +122,8 @@ Never rely on PATH to resolve the agent CLI. Store the full binary path at first
 macOS / Linux:
 ```bash
 AGENT_BIN=$(which <agent>)
-mkdir -p ~/.imprint/toneai-nux-qr
-echo '{"agent": "<agent>", "bin": "'$AGENT_BIN'"}' > ~/.imprint/toneai-nux-qr/config.json
+mkdir -p ~/.imprint/toneai-nux-imprint
+echo '{"agent": "<agent>", "bin": "'$AGENT_BIN'"}' > ~/.imprint/toneai-nux-imprint/config.json
 ```
 
 The desktop shortcut launch command and all subsequent invocations should use the stored path from `config.json` rather than the agent name directly.

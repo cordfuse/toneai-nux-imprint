@@ -7,7 +7,7 @@ permissions: sandboxed
 bash-policy: allow-all
 update:
   enabled: true
-  repo: steve-krisjanovs/toneai-nux
+  repo: steve-krisjanovs/toneai-nux-imprint
   check: on-session-start
 ```
 

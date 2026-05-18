@@ -15,20 +15,20 @@ enabled:
 
 ```
 ~/.imprint/memory.md                              # User scope (all Imprint apps)
-~/.imprint/toneai-nux-qr/memory.md               # App scope (this app only)
-~/.imprint/toneai-nux-qr/{session-id}/memory.md  # Session scope (this session)
+~/.imprint/toneai-nux-imprint/memory.md               # App scope (this app only)
+~/.imprint/toneai-nux-imprint/{session-id}/memory.md  # Session scope (this session)
 ```
 
 On Windows:
 ```
 %USERPROFILE%\.imprint\memory.md
-%USERPROFILE%\.imprint\toneai-nux-qr\memory.md
-%USERPROFILE%\.imprint\toneai-nux-qr\{session-id}\memory.md
+%USERPROFILE%\.imprint\toneai-nux-imprint\memory.md
+%USERPROFILE%\.imprint\toneai-nux-imprint\{session-id}\memory.md
 ```
 
 ### How to Write Memory
 
-- Create directories if they don't exist (`mkdir -p ~/.imprint/toneai-nux-qr/`)
+- Create directories if they don't exist (`mkdir -p ~/.imprint/toneai-nux-imprint/`)
 - Append entries to the appropriate memory file
 - Use YAML-like format: `key: value` or `- list item`
 - Read the file first to avoid duplicates — update existing entries instead of adding new ones
@@ -39,7 +39,7 @@ At session start, read all enabled scope files (in order: user → app → sessi
 
 ```bash
 cat ~/.imprint/memory.md 2>/dev/null
-cat ~/.imprint/toneai-nux-qr/memory.md 2>/dev/null
+cat ~/.imprint/toneai-nux-imprint/memory.md 2>/dev/null
 ```
 
 ## User-Scope Memory — Key Fields
@@ -56,7 +56,7 @@ Stored in `~/.imprint/memory.md`:
 
 ## App-Scope Memory — Key Fields
 
-Stored in `~/.imprint/toneai-nux-qr/memory.md`:
+Stored in `~/.imprint/toneai-nux-imprint/memory.md`:
 
 - `output_folder` — Absolute path where QR images are saved. Asked on first session.
 - `preset_index` — List of generated presets with song/artist, device, date, and file path.

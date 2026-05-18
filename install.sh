@@ -14,7 +14,7 @@ set -e
 REPO="steve-krisjanovs/toneai-nux-imprint"
 CDN="https://cdn.jsdelivr.net/gh/${REPO}@latest"
 WIZARD_URL="${CDN}/setup/src/index.ts"
-WIZARD_DIR="${HOME}/.toneai-nux"
+WIZARD_DIR="${HOME}/.toneai-nux-imprint"
 WIZARD_PATH="${WIZARD_DIR}/wizard.ts"
 
 # ── Banner ──────────────────────────────────────────────────────────────────

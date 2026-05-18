@@ -12,7 +12,7 @@ $ErrorActionPreference = "Stop"
 
 $Repo       = "steve-krisjanovs/toneai-nux-imprint"
 $WizardUrl  = "https://github.com/$Repo/releases/latest/download/toneai-nux-imprint.ts"
-$WizardDir  = Join-Path $env:USERPROFILE ".toneai-nux"
+$WizardDir  = Join-Path $env:USERPROFILE ".toneai-nux-imprint"
 $WizardPath = Join-Path $WizardDir "wizard.ts"
 
 # ── Banner ──────────────────────────────────────────────────────────────────

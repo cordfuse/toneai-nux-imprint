@@ -81,7 +81,7 @@ The generator handles coercion of missing or malformed fields automatically.
 ### Project Structure
 
 ```
-toneai-nux/
+toneai-nux-imprint/
   IMPRINT.md          # Engine (this file)
   imprint/            # App definition (ToneAI persona)
     IDENTITY.md         # ToneAI identity and personality
@@ -90,7 +90,7 @@ toneai-nux/
     WELCOME.md          # Welcome flow — shortcut, device check, onboarding
     REDIRECT.md         # "Let's stay on the fretboard!"
     SESSION.md          # mode: multi, cwd: fixed
-    MEMORY.md           # Imprint memory (~/.imprint/toneai-nux-qr/)
+    MEMORY.md           # Imprint memory (~/.imprint/toneai-nux-imprint/)
     icon.svg            # Guitar app icon
     agents/             # Per-agent permission configs
   src/
@@ -106,7 +106,7 @@ toneai-nux/
 - **`mode: multi`** — Each tone session is its own session. Multiple concurrent sessions supported.
 - **`cwd: fixed`** — QR images go to `./output/` and the user's output folder.
 - **`src/qr-generator.ts`** — Encodes NUX MightyAmp QR binary payloads and saves decorated PNG images.
-- **Memory** — Persists to `~/.imprint/toneai-nux-qr/` (device, instrument, output folder, preset index).
+- **Memory** — Persists to `~/.imprint/toneai-nux-imprint/` (device, instrument, output folder, preset index).
 
 ### Testing
 
