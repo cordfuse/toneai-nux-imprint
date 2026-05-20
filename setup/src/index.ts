@@ -166,6 +166,7 @@ async function main() {
   const agents = [
     { cmd: "claude",   label: "Claude Code" },
     { cmd: "gemini",   label: "Gemini CLI"  },
+    { cmd: "agy",      label: "Antigravity CLI" },
     { cmd: "opencode", label: "OpenCode"    },
     { cmd: "codex",    label: "OpenAI Codex CLI" },
   ];
@@ -237,7 +238,7 @@ async function main() {
   if (foundAgents.length > 0) {
     console.log(`    ${cyan(foundAgents[0].cmd)}`);
   } else {
-    console.log(`    ${cyan("claude")}   ${dim("# or: gemini / codex / opencode")}`);
+    console.log(`    ${cyan("claude")}   ${dim("# or: gemini / agy / codex / opencode")}`);
   }
 
   console.log();

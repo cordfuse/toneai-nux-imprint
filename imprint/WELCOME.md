@@ -67,8 +67,8 @@ If the agent is running inside a chat-web sandbox (Claude.ai web project, ChatGP
 
 Detection — **any one of these classifies the environment as chat-web; skip Step 2 entirely**:
 
-1. **No agent CLI in the process tree.** Run `ps -o comm= -p $PPID` (or walk up the tree). If the parent is not `claude`, `gemini`, `codex`, or `opencode`, this is chat-web. The CLI agents are the only legitimate parents for a real desktop session.
-2. **No agent binary on PATH.** Run `which claude gemini codex opencode 2>/dev/null`. If all four return empty, this is chat-web.
+1. **No agent CLI in the process tree.** Run `ps -o comm= -p $PPID` (or walk up the tree). If the parent is not `claude`, `gemini`, `agy`, `codex`, or `opencode`, this is chat-web. The CLI agents are the only legitimate parents for a real desktop session.
+2. **No agent binary on PATH.** Run `which claude gemini agy codex opencode 2>/dev/null`. If all five return empty, this is chat-web.
 3. **Sandbox markers.** Presence of `/.dockerenv` combined with absence of `~/.bashrc` AND absence of `~/.zshrc` is a strong chat-web signal.
 4. **Bash availability.** If `bash` itself returns "command not found" or shell tools are tightly restricted, this is chat-web — even if a filesystem appears writable, the desktop-shortcut commands cannot run.
 
@@ -94,7 +94,7 @@ If headless, skip to Step 7 (greet without mentioning the shortcut).
 ### Detect the agent CLI
 
 Inspect the process tree to determine which agent is running:
-- Look for `claude`, `gemini`, `codex`, or `opencode` in the parent process chain
+- Look for `claude`, `gemini`, `agy`, `codex`, or `opencode` in the parent process chain
 - Use `ps -o comm= -p $PPID` or walk up the tree as needed
 
 ### Agent binary path
@@ -127,6 +127,7 @@ Read `imprint/SESSION.md` and parse the `permissions` field from the YAML block.
 |---|---|
 | `claude` | `claude "hello"` |
 | `gemini` | `gemini -i "hello"` |
+| `agy` | `agy -i "hello"` |
 | `codex` | `codex "hello"` |
 | `opencode` | `opencode run "hello"` |
 
@@ -136,6 +137,7 @@ Read `imprint/SESSION.md` and parse the `permissions` field from the YAML block.
 |---|---|
 | `claude` | `claude --dangerously-skip-permissions "hello"` |
 | `gemini` | `gemini --yolo -i "hello"` |
+| `agy` | `agy --dangerously-skip-permissions -i "hello"` |
 | `codex` | `codex --full-auto "hello"` |
 | `opencode` | `opencode run "hello"` |
 
