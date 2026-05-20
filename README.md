@@ -26,7 +26,7 @@ The installer ensures Bun is available, downloads ToneAI, and prints the launch 
 
 ```
 cd ~/toneai
-claude        # or: gemini / codex / opencode
+claude        # or: gemini / agy / codex / opencode
 ```
 
 **Supported agents (any desktop OS):**
@@ -34,7 +34,8 @@ claude        # or: gemini / codex / opencode
 | Agent | Command |
 |---|---|
 | Claude Code | `claude` |
-| Gemini CLI | `gemini` |
+| Gemini CLI | `gemini` *(⚠ OAuth/Google-One unpaid tier sunsets 2026-06-18 — migrate to Antigravity below)* |
+| Antigravity CLI | `agy` *(Google's official Gemini CLI successor)* |
 | Codex CLI | `codex` |
 | OpenCode | `opencode` |
 
@@ -105,7 +106,7 @@ Bass players: BassMate amp, TR212Pro cab, compressor always on.
 
 ## Requirements
 
-- An AI agent CLI with an active account ([Claude Code](https://claude.ai/download), [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Codex](https://platform.openai.com/codex), or [OpenCode](https://opencode.ai))
+- An AI agent CLI with an active account ([Claude Code](https://claude.ai/download), [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Antigravity CLI](https://github.com/google-antigravity/antigravity-cli), [Codex](https://platform.openai.com/codex), or [OpenCode](https://opencode.ai))
 - Node.js
 - A NUX MightyAmp device and the NUX app to scan QR codes
 

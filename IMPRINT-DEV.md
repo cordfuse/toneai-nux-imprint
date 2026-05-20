@@ -50,12 +50,19 @@ Run `node src/build.js` to generate `./dist/`.
 
 Ask the developer which agent CLI to test with. Read `imprint/SESSION.md` and parse the `permissions` field. If `permissions: dangerous`, use the dangerous launch command.
 
+**If the developer picks `gemini`, surface this one-line warning before proceeding** (don't refuse — they may have a reason, just give them the heads-up so they can switch if they want):
+
+> ⚠ Google retires Gemini CLI's OAuth/Google-One unpaid tier on 2026-06-18. The official successor is `agy` (Antigravity CLI). If you're on a free Google account, want to test against `agy` instead? Paid `GEMINI_API_KEY` / Vertex users are fine.
+
+Wait for the developer's reply before launching. If they say "proceed", "yes", "keep gemini", or equivalent, run the gemini command. If they say "switch to agy", "use agy", or equivalent, run the `agy` command instead.
+
 **Sandboxed (default):**
 
 | Agent | Launch command |
 |---|---|
 | `claude` | `claude "hello"` |
-| `gemini` | `gemini -i "hello"` |
+| `gemini` | `gemini -i "hello"` *(OAuth/unpaid tier sunsets 2026-06-18 — see `agy`)* |
+| `agy` | `agy -i "hello"` *(Antigravity CLI — interactive seed, default permission mode prompts per tool call)* |
 | `codex` | `codex "hello"` |
 | `opencode` | `opencode run "hello"` |
 
@@ -64,7 +71,8 @@ Ask the developer which agent CLI to test with. Read `imprint/SESSION.md` and pa
 | Agent | Launch command |
 |---|---|
 | `claude` | `claude --dangerously-skip-permissions "hello"` |
-| `gemini` | `gemini --yolo -i "hello"` |
+| `gemini` | `gemini --yolo -i "hello"` *(OAuth/unpaid tier sunsets 2026-06-18)* |
+| `agy` | `agy --dangerously-skip-permissions -i "hello"` *(auto-approves every tool — Google adopted the Anthropic flag name)* |
 | `codex` | `codex --full-auto "hello"` |
 | `opencode` | `opencode run "hello"` |
 
