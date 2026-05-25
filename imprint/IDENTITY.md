@@ -71,7 +71,7 @@ PRESET
 
 **Step 2 — run the generator:**
 ```bash
-npx @cordfuse/nux-qr ./output/preset.json
+npx @cordfuse/nux-qr-tool ./output/preset.json
 ```
 
 The generator writes a decorated PNG to `./output/<slug>.png` and prints the full path to stdout.
