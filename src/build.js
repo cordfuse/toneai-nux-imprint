@@ -97,14 +97,7 @@ if (fs.existsSync(imprintDir)) {
   console.log('  Copied imprint/ app definition');
 }
 
-// --- Step 5: Copy src/ if it exists ---
-const srcDir = path.join(ROOT, 'src');
-if (fs.existsSync(srcDir)) {
-  copyDirRecursive(srcDir, path.join(DIST, 'src'));
-  console.log('  Copied src/ tooling');
-}
-
-// --- Step 6: Copy other shipping files ---
+// --- Step 5: Copy other shipping files ---
 const copyFiles = ['README.md', 'LICENSE', 'version.txt', '.gitignore', 'package.json'];
 for (const file of copyFiles) {
   const srcPath = path.join(ROOT, file);
