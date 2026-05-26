@@ -4,6 +4,14 @@ Tell ToneAI what song you want to sound like. It searches the web for the origin
 
 It runs inside your existing AI account — Claude, Gemini, or OpenAI. No API keys. No extra subscription. Download, open, and play.
 
+Real session, asking for Kashmir on a Plug Pro:
+
+![Asking for the tone](assets/toneai-request.png)
+
+![ToneAI's response](assets/toneai-response.png)
+
+![Generated QR](assets/toneai-qr.png)
+
 ---
 
 ## Getting started
