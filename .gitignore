@@ -6,3 +6,5 @@ node_modules/
 
 # Compiled setup wizard binary (built by setup/bun build --compile)
 setup/toneai-nux
+
+.env
