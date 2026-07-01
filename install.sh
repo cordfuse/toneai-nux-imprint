@@ -2,7 +2,7 @@
 # ToneAI installer — macOS / Linux
 #
 # Usage:
-#   curl -fsSL https://github.com/steve-krisjanovs/toneai-nux-imprint/releases/latest/download/install.sh | bash
+#   curl -fsSL https://github.com/cordfuse/toneai-nux-imprint/releases/latest/download/install.sh | bash
 #
 # What this does:
 #   1. Ensures Bun is installed (installs if missing)
@@ -11,7 +11,7 @@
 
 set -e
 
-REPO="steve-krisjanovs/toneai-nux-imprint"
+REPO="cordfuse/toneai-nux-imprint"
 CDN="https://cdn.jsdelivr.net/gh/${REPO}@latest"
 WIZARD_URL="${CDN}/setup/src/index.ts"
 WIZARD_DIR="${HOME}/.toneai-nux-imprint"

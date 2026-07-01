@@ -29,7 +29,7 @@ const IS_WIN   = platform() === "win32";
 const IS_MAC   = platform() === "darwin";
 const IS_LINUX = platform() === "linux";
 
-const REPO    = "steve-krisjanovs/toneai-nux-imprint";
+const REPO    = "cordfuse/toneai-nux-imprint";
 const ZIP_URL = `https://github.com/${REPO}/releases/latest/download/toneai-nux-imprint-source.zip`;
 
 // Bun's native prompt() reads the controlling TTY correctly even when this
