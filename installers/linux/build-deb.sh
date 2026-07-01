@@ -18,7 +18,7 @@ Version: $VERSION
 Section: utils
 Priority: optional
 Architecture: amd64
-Maintainer: Cordfuse <opensource@cordfuse.com>
+Maintainer: Cordfuse <steve.krisjanovs@gmail.com>
 Description: Setup wizard for ToneAI NUX MightyAmp tone assistant
  ToneAI builds NUX MightyAmp presets from artist/song descriptions using AI.
  This wizard downloads ToneAI and installs all required dependencies.
