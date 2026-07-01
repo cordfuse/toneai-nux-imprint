@@ -29,7 +29,7 @@ chmod +x "$PKG_ROOT/usr/local/bin/toneai-nux-imprint"
 
 pkgbuild \
   --root "$PKG_ROOT" \
-  --identifier "com.stevekrisjanovs.toneai-nux-imprint" \
+  --identifier "com.cordfuse.toneai-nux-imprint" \
   --version "$VERSION" \
   --install-location "/" \
   "$DIST_DIR/toneai-nux-imprint-$VERSION-macos.pkg"

@@ -20,7 +20,7 @@ Version:        $VERSION
 Release:        1
 Summary:        Setup wizard for ToneAI NUX MightyAmp tone assistant
 License:        MIT
-URL:            https://github.com/steve-krisjanovs/toneai-nux-imprint
+URL:            https://github.com/cordfuse/toneai-nux-imprint
 Source0:        toneai-nux-imprint-%{version}.tar.gz
 
 %description
@@ -39,7 +39,7 @@ chmod +x %{buildroot}/usr/local/bin/toneai-nux-imprint
 /usr/local/bin/toneai-nux-imprint
 
 %changelog
-* $(date '+%a %b %d %Y') Steve Krisjanovs <steve.krisjanovs@gmail.com> - $VERSION-1
+* $(date '+%a %b %d %Y') Cordfuse <opensource@cordfuse.com> - $VERSION-1
 - Release $VERSION
 EOF
 

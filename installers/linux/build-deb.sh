@@ -18,11 +18,11 @@ Version: $VERSION
 Section: utils
 Priority: optional
 Architecture: amd64
-Maintainer: Steve Krisjanovs <steve.krisjanovs@gmail.com>
+Maintainer: Cordfuse <opensource@cordfuse.com>
 Description: Setup wizard for ToneAI NUX MightyAmp tone assistant
  ToneAI builds NUX MightyAmp presets from artist/song descriptions using AI.
  This wizard downloads ToneAI and installs all required dependencies.
- Homepage: https://github.com/steve-krisjanovs/toneai-nux-imprint
+ Homepage: https://github.com/cordfuse/toneai-nux-imprint
 EOF
 
 dpkg-deb --build "$PKG_DIR" "$DIST_DIR/toneai-nux-imprint_${VERSION}_amd64.deb"

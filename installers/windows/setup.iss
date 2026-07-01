@@ -1,6 +1,6 @@
 #define MyAppName "toneai-nux-imprint"
-#define MyAppPublisher "Steve Krisjanovs"
-#define MyAppURL "https://github.com/steve-krisjanovs/toneai-nux-imprint"
+#define MyAppPublisher "Cordfuse"
+#define MyAppURL "https://github.com/cordfuse/toneai-nux-imprint"
 #define MyAppExeName "toneai-nux-imprint.exe"
 
 [Setup]

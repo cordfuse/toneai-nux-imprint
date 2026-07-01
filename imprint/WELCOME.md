@@ -235,7 +235,7 @@ Then `chmod +x` the launch script.
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleIdentifier</key>
-    <string>com.stevekrisjanovs.toneai</string>
+    <string>com.cordfuse.toneai</string>
     <key>LSUIElement</key>
     <false/>
     <key>ImprintVersion</key>

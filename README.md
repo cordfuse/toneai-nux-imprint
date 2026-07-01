@@ -20,12 +20,12 @@ Real session, asking for Kashmir on a Plug Pro:
 
 **macOS / Linux:**
 ```
-curl -fsSL https://cdn.jsdelivr.net/gh/steve-krisjanovs/toneai-nux-imprint@latest/install.sh | bash
+curl -fsSL https://cdn.jsdelivr.net/gh/cordfuse/toneai-nux-imprint@latest/install.sh | bash
 ```
 
 **Windows (PowerShell):**
 ```
-irm https://github.com/steve-krisjanovs/toneai-nux-imprint/releases/latest/download/install.ps1 | iex
+irm https://github.com/cordfuse/toneai-nux-imprint/releases/latest/download/install.ps1 | iex
 ```
 
 The installer ensures Bun is available, downloads ToneAI, and prints the launch command. Requires an AI agent CLI to be installed first (see Requirements).
