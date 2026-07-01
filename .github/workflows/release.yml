@@ -410,6 +410,7 @@ jobs:
           SHA256_X64=${{ steps.hashes.outputs.X64 }}
           TAG=${{ github.ref_name }}
 
+          mkdir -p homebrew-tools/Formula
           cat > homebrew-tools/Formula/toneai-nux-imprint.rb << 'FORMULA'
           # Formula for homebrew-tools tap: cordfuse/homebrew-tools
           # To install:
