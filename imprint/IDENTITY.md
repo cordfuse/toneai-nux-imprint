@@ -74,12 +74,6 @@ PRESET
 npx @cordfuse/nux-qr-tool ./preset.json
 ```
 
-<!-- OFFLINE_FALLBACK -->
-**If that fails because there is no network** — you are in a sandbox, or offline — a self-contained copy of the generator ships with the app. Run that instead, and do not try to install anything:
-```bash
-node tool/nux-qr-tool.js ./preset.json
-```
-
 The generator writes a decorated PNG to `./<slug>.png` and prints the full path to stdout.
 
 **Step 3 — display and report:**

@@ -173,18 +173,11 @@ if (fs.existsSync(claudeSettingsPath)) {
 execSync('git init', { cwd: DIST, stdio: 'ignore' });
 console.log('  Initialized git (required for agent config discovery)');
 
-// --- Step 10: Vendor the QR generator into the app (the offline fallback) ---
-// npx needs a network. The two places this app most likely runs without one are a
-// sandbox and the mobile ZIP, so it carries a self-contained generator and IDENTITY.md
-// names it. Fails the build if the vendored generator doesn't produce a PNG.
-const { buildSkill, vendorTool } = require('./build-skill.js');
-const tool = vendorTool(DIST);
-console.log(`  Vendored generator: tool/nux-qr-tool.js (${(tool.bytes / 1024 / 1024).toFixed(2)} MB), smoke test passed`);
-
-// --- Step 11: Package the Claude Skill (claude.ai) ---
-// Built BESIDE dist/, never inside it. SKILL.md is a second copy of ToneAI's persona;
-// shipping it in the app ZIP would put two identity documents in one tree for the agent
-// to trip over.
+// --- Step 10: Package the Claude Skill (claude.ai) ---
+// ToneAI's route into Claude web: SKILL.md + the QR generator, in one ZIP. Built BESIDE
+// dist/, never inside it — SKILL.md is a second copy of ToneAI's persona, and shipping it
+// in the app tree would leave two identity documents for the agent to trip over.
+const { buildSkill } = require('./build-skill.js');
 const SKILL_DIST = path.join(ROOT, 'dist-skill');
 const skill = buildSkill(SKILL_DIST, version);
 console.log(`  Skill: dist-skill/ — SKILL.md + nux-qr-tool.js (${(skill.bytes / 1024 / 1024).toFixed(2)} MB), smoke test passed`);

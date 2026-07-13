@@ -11,8 +11,7 @@ The agent is allowed to perform ONLY the following operations. Everything else i
 
 ## Shell / Command Execution
 
-- `npx tsx src/qr-generator.ts` — encode a NUX MightyAmp QR preset and save as a PNG image
-- `npm install` — install app dependencies
+- `npx @cordfuse/nux-qr-tool` — encode a NUX MightyAmp QR preset and save it as a PNG
 - `ls ./output/` — list output files
 
 ## Web Search

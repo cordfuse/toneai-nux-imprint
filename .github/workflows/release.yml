@@ -6,10 +6,9 @@ name: Release
 #   - install.sh / install.ps1                 (pipe-installer bootstrap, stable name)
 #   - toneai-nux-imprint.ts                           (TypeScript setup wizard, stable name)
 #   - toneai-nux-imprint-source.zip                         (lean desktop bundle, stable name)
-#   - toneai-nux-imprint-desktop-v*.zip   (lean desktop, runtime npm install)
-#   - toneai-nux-imprint-v*.zip           (full ZIP, ~27MB, mobile-compatible)
-#   - toneai-nux-skill-v*.zip             (Claude Skill — SKILL.md + vendored generator;
-#                                          upload to claude.ai for ToneAI in Claude web)
+#   - toneai-nux-imprint-desktop-v*.zip   (lean desktop, for an agent CLI)
+#   - toneai-nux-skill-v*.zip             (Claude Skill — SKILL.md + the QR generator;
+#                                          import at claude.ai for ToneAI in Claude web)
 #   - toneai-nux-imprint-{linux-x64,win-x64.exe,mac-arm64,mac-x64}  (Bun-compiled binaries)
 #   - toneai-nux-imprint.exe                          (Inno Setup Windows installer)
 #   - toneai-nux-imprint-{VERSION}-macos.pkg          (macOS pkg)
@@ -64,24 +63,17 @@ jobs:
           cd dist
           zip -r "../${REPO_NAME}-desktop-v${VERSION}.zip" .
 
-      # The Claude web path: SKILL.md + the vendored generator. Uploaded to claude.ai
-      # under Settings > Capabilities > Skills.
+      # ToneAI in Claude web. SKILL.md + the QR generator in one ZIP, imported at
+      # claude.ai under Settings > Capabilities > Skills.
+      #
+      # This REPLACES the old "full" ~27MB ZIP (dist + node_modules), which was built to
+      # be uploaded into a chat. It never could be: claude.ai projects do not accept .zip
+      # uploads. The skill is the supported route, and it is the one that works.
       - name: Package Claude Skill
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
           cd dist-skill
           zip -r "../toneai-nux-skill-v${VERSION}.zip" .
-
-      - name: Install dependencies for full release
-        run: npm install --production
-        working-directory: dist
-
-      - name: Package full release (with node_modules — mobile compatible)
-        run: |
-          VERSION="${{ steps.version.outputs.VERSION }}"
-          REPO_NAME="toneai-nux-imprint"   # all distributable artifacts carry the toneai-nux-imprint name (full rename, v1.4.3+)
-          cd dist
-          zip -r "../${REPO_NAME}-v${VERSION}.zip" .
 
       - name: Stage pipe-installer assets (stable filenames for releases/latest/download/)
         run: |
@@ -324,7 +316,7 @@ jobs:
 
             ### Path 2 — Desktop CLI (developers)
 
-            Download `toneai-nux-imprint-desktop-v${{ steps.version.outputs.VERSION }}.zip`, extract, open the folder in any supported agent CLI, say hello — ToneAI handles the rest. First launch installs `node_modules` automatically.
+            Download `toneai-nux-imprint-desktop-v${{ steps.version.outputs.VERSION }}.zip`, extract, open the folder in any supported agent CLI, say hello — ToneAI handles the rest.
 
             **Supported agents (any desktop OS — Mac, Windows, Linux):**
 
@@ -339,18 +331,23 @@ jobs:
 
             On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 
-            ## Not supported
+            ### Path 3 — Claude web and mobile (Claude Skill) — NEW
 
-            Web/mobile chat clients are not viable for ToneAI as a recurring tool. Tested 2026-05-04:
+            Download `toneai-nux-skill-v${{ steps.version.outputs.VERSION }}.zip` and import it at **claude.ai → Settings → Capabilities → Skills**.
+
+            That's it. ToneAI is then available in **any** chat, on the web and in the mobile app — nothing to attach, nothing to re-prompt, no install on your machine. Ask for a tone and it hands you the QR to scan.
+
+            The skill carries its own QR generator, so it runs entirely inside Claude's sandbox with no network access and no dependencies. The presets are byte-identical to the ones the desktop app produces — it's the same encoder.
+
+            ## Not supported
 
             | Surface | Status |
             |---|---|
-            | Claude.ai web/mobile chat | ⚠️ Technically works as a one-off, but each new chat requires re-attaching the ZIP and re-prompting. Use Path 1 or Path 2 for repeat use. |
-            | Claude Projects | ❌ ZIP uploads not accepted; GitHub-as-knowledge connection doesn't run as the persona |
+            | Claude Projects | ❌ ZIP uploads not accepted — use the Skill (Path 3) instead |
             | ChatGPT web | ❌ Safety layer rejects the persona-takeover pattern |
             | Gemini web | ❌ Emits a JSON output file instead of running as ToneAI |
 
-            If you can't install Path 1 or Path 2, ToneAI isn't the right shape for your environment. Use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
+            If none of the three paths fit your environment, use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
           files: release-assets/**/*
           draft: false
           prerelease: false
