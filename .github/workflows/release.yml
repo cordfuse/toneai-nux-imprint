@@ -8,6 +8,8 @@ name: Release
 #   - toneai-nux-imprint-source.zip                         (lean desktop bundle, stable name)
 #   - toneai-nux-imprint-desktop-v*.zip   (lean desktop, runtime npm install)
 #   - toneai-nux-imprint-v*.zip           (full ZIP, ~27MB, mobile-compatible)
+#   - toneai-nux-skill-v*.zip             (Claude Skill — SKILL.md + vendored generator;
+#                                          upload to claude.ai for ToneAI in Claude web)
 #   - toneai-nux-imprint-{linux-x64,win-x64.exe,mac-arm64,mac-x64}  (Bun-compiled binaries)
 #   - toneai-nux-imprint.exe                          (Inno Setup Windows installer)
 #   - toneai-nux-imprint-{VERSION}-macos.pkg          (macOS pkg)
@@ -43,6 +45,11 @@ jobs:
         with:
           node-version: '20'
 
+      # src/build.js vendors the QR generator into the Claude Skill, so the toolchain
+      # has to be installed before it runs.
+      - name: Install build dependencies
+        run: npm ci
+
       - name: Build
         run: node src/build.js
 
@@ -56,6 +63,14 @@ jobs:
           REPO_NAME="toneai-nux-imprint"   # all distributable artifacts carry the toneai-nux-imprint name (full rename, v1.4.3+)
           cd dist
           zip -r "../${REPO_NAME}-desktop-v${VERSION}.zip" .
+
+      # The Claude web path: SKILL.md + the vendored generator. Uploaded to claude.ai
+      # under Settings > Capabilities > Skills.
+      - name: Package Claude Skill
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          cd dist/skill
+          zip -r "../../toneai-nux-skill-v${VERSION}.zip" .
 
       - name: Install dependencies for full release
         run: npm install --production
@@ -354,6 +369,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+
+      - name: Install build dependencies
+        run: npm ci
 
       - name: Build dist
         run: node src/build.js

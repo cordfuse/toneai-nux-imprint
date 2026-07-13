@@ -9,5 +9,8 @@
     "@napi-rs/canvas": "^0.1.68",
     "qrcode": "^1.5.4",
     "tsx": "^4.0.0"
+  },
+  "devDependencies": {
+    "@cordfuse/nux-qr-tool": "^1.5.0"
   }
 }

@@ -173,5 +173,13 @@ if (fs.existsSync(claudeSettingsPath)) {
 execSync('git init', { cwd: DIST, stdio: 'ignore' });
 console.log('  Initialized git (required for agent config discovery)');
 
+// --- Step 10: Package the Claude Skill (claude.ai) ---
+// Same generator, same command shape as the desktop app — the sandbox just has no
+// network, so the generator is vendored instead of npx'd. Fails the build if the
+// vendored generator doesn't produce a PNG.
+const { buildSkill } = require('./build-skill.js');
+const skill = buildSkill(path.join(DIST, 'skill'), version);
+console.log(`  Skill: dist/skill/ — SKILL.md + nux-qr-tool.js (${(skill.bytes / 1024 / 1024).toFixed(2)} MB), smoke test passed`);
+
 console.log(`\nBuild complete → ${DIST}`);
 console.log(`Open this directory in an agent CLI to test user mode.`);
