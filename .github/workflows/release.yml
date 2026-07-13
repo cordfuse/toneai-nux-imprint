@@ -274,6 +274,8 @@ jobs:
 
             Tell ToneAI what song or artist you want to sound like. It builds a NUX MightyAmp preset and saves a QR code you scan into the NUX app. Uses your existing AI subscription — no extra API key.
 
+            > **Just want to use it?** Grab **`toneai-nux-skill-v${{ steps.version.outputs.VERSION }}.zip`** and import it into claude.ai as a Skill — see **Path 3** below. Nothing to install, works on your phone, takes a minute. The other paths are for running ToneAI in an agent CLI on a desktop.
+
             ## Install
 
             ### Path 0 — Pipe installer (recommended)
@@ -331,13 +333,22 @@ jobs:
 
             On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 
-            ### Path 3 — Claude web and mobile (Claude Skill) — NEW
+            ### Path 3 — Claude web and mobile (Claude Skill) — EASIEST
 
-            Download `toneai-nux-skill-v${{ steps.version.outputs.VERSION }}.zip` and import it at **claude.ai → Settings → Capabilities → Skills**.
+            **Download: `toneai-nux-skill-v${{ steps.version.outputs.VERSION }}.zip`** (below, under Assets — it's the small one, about 600 KB).
 
-            That's it. ToneAI is then available in **any** chat, on the web and in the mobile app — nothing to attach, nothing to re-prompt, no install on your machine. Ask for a tone and it hands you the QR to scan.
+            Then, in Claude:
 
-            The skill carries its own QR generator, so it runs entirely inside Claude's sandbox with no network access and no dependencies. The presets are byte-identical to the ones the desktop app produces — it's the same encoder.
+            1. Go to **claude.ai** and sign in (Pro, Max, Team or Enterprise — Skills aren't on the free plan).
+            2. Open **Settings → Capabilities → Skills**.
+            3. Click **Upload skill** and pick the ZIP. Don't unzip it first.
+            4. Done. ToneAI is now in **every** chat, web and mobile app.
+
+            Ask for a tone — *"dial in the Comfortably Numb solo, I'm on a Mighty Plug Pro with a Les Paul"* — and it hands you the QR. Scan it in the NUX app.
+
+            No install on your machine, nothing to attach, no re-prompting each chat. It asks once which NUX device and pickups you have, then remembers.
+
+            The skill carries its own QR generator, so it runs entirely inside Claude's sandbox — no network, no dependencies. Presets are byte-identical to the desktop app's: same encoder.
 
             ## Not supported
 
