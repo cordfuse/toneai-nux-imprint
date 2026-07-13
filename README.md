@@ -16,6 +16,26 @@ Real session, asking for Kashmir on a Plug Pro:
 
 ## Getting started
 
+### The easy way — Claude web and mobile (start here)
+
+No terminal, no install, works on your phone.
+
+1. Download **`toneai-nux-skill-v<version>.zip`** from the [latest release](https://github.com/cordfuse/toneai-nux-imprint/releases/latest) — the small one, about 600 KB.
+2. At **claude.ai → Settings → Capabilities → Skills**, click **Upload skill** and choose the ZIP. Don't unzip it.
+3. That's it. ToneAI is in every chat from then on, web and mobile.
+
+Ask for a tone — *"dial in the Comfortably Numb solo, I'm on a Mighty Plug Pro with a Les Paul"* — and it hands you the QR. Scan it in the NUX app.
+
+It asks once which NUX device and pickups you have, then remembers. The skill brings its own QR generator and runs entirely inside Claude's sandbox — no network, no dependencies. Presets are byte-identical to the desktop app's: it's the same encoder.
+
+Skills need a paid Claude plan (Pro, Max, Team, or Enterprise).
+
+---
+
+## Desktop (agent CLI)
+
+For local files and offline use. **This one needs a command line** — if that's not for you, the skill above gives you the same tones.
+
 ### Install
 
 **macOS / Linux:**
@@ -48,18 +68,6 @@ claude        # or: gemini / agy / codex / opencode
 | OpenCode | `opencode` |
 
 On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
-
-## Claude web and mobile — the Claude Skill
-
-No install, no CLI, works on your phone.
-
-1. Download **`toneai-nux-skill-v<version>.zip`** from the [latest release](https://github.com/cordfuse/toneai-nux-imprint/releases/latest) — the small one, about 600 KB.
-2. At **claude.ai → Settings → Capabilities → Skills**, click **Upload skill** and pick the ZIP. Don't unzip it.
-3. That's it. ToneAI is in every chat from then on, web and mobile.
-
-The skill carries its own QR generator and runs entirely inside Claude's sandbox — no network, no dependencies. Presets are byte-identical to the desktop app's: it is the same encoder. It asks once which NUX device and pickups you have, then remembers.
-
-Skills need a paid Claude plan (Pro, Max, Team, or Enterprise).
 
 ### Not supported
 
@@ -124,9 +132,14 @@ Bass players: BassMate amp, TR212Pro cab, compressor always on.
 
 ## Requirements
 
+**Claude Skill (the easy way):** a paid Claude plan (Pro, Max, Team, or Enterprise). Nothing else.
+
+**Desktop:**
+
 - An AI agent CLI with an active account ([Claude Code](https://claude.ai/download), [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Antigravity CLI](https://github.com/google-antigravity/antigravity-cli), [Codex](https://platform.openai.com/codex), or [OpenCode](https://opencode.ai))
 - Node.js
-- A NUX MightyAmp device and the NUX app to scan QR codes
+
+**Both:** a NUX MightyAmp device and the NUX app to scan QR codes.
 
 ---
 

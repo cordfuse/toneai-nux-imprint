@@ -274,11 +274,32 @@ jobs:
 
             Tell ToneAI what song or artist you want to sound like. It builds a NUX MightyAmp preset and saves a QR code you scan into the NUX app. Uses your existing AI subscription — no extra API key.
 
-            > **Just want to use it?** Grab **`toneai-nux-skill-v${{ steps.version.outputs.VERSION }}.zip`** and import it into claude.ai as a Skill — see **Path 3** below. Nothing to install, works on your phone, takes a minute. The other paths are for running ToneAI in an agent CLI on a desktop.
-
             ## Install
 
-            ### Path 0 — Pipe installer (recommended)
+            ### Path 1 — Claude web and mobile (Claude Skill) — START HERE
+
+            **No terminal, no install, works on your phone.** This is the easiest way to use ToneAI, and for most players it's the only one they'll need.
+
+            **Download `toneai-nux-skill-v${{ steps.version.outputs.VERSION }}.zip`** from the Assets below — the small one, about 600 KB.
+
+            Then, in Claude:
+
+            1. Go to **claude.ai** and sign in. (Skills need a paid plan — Pro, Max, Team or Enterprise.)
+            2. Open **Settings → Capabilities → Skills**.
+            3. Click **Upload skill** and choose the ZIP. Don't unzip it first.
+            4. That's it. ToneAI is now in **every** chat, on the web and in the Claude mobile app.
+
+            Ask for a tone — *"dial in the Comfortably Numb solo, I'm on a Mighty Plug Pro with a Les Paul"* — and it hands you the QR code. Scan it in the NUX app and play.
+
+            It asks once which NUX device and pickups you have, then remembers. Nothing to re-attach, nothing to re-prompt.
+
+            The skill brings its own QR generator and runs entirely inside Claude's sandbox — no network, no dependencies. The presets are byte-identical to the desktop app's: it's the same encoder.
+
+            ---
+
+            **The paths below run ToneAI in a terminal on your desktop.** They give you local files and offline use, and they need a command line. If that's not you, stop at Path 1 — you're not missing any tones.
+
+            ### Path 2 — Pipe installer
 
             **macOS / Linux:**
             ```
@@ -292,7 +313,7 @@ jobs:
 
             One-liner. Installs Bun if missing, fetches the setup wizard, downloads ToneAI into `~/toneai`, prints how to launch it. No signed-installer permissions, no manual download, always picks up the latest release.
 
-            ### Path 1 — Setup wizard binary (alternative)
+            ### Path 3 — Setup wizard binary
 
             **Windows:** Download and run `toneai-nux-imprint.exe`
 
@@ -316,7 +337,7 @@ jobs:
 
             Run `toneai-nux-imprint` — the wizard handles the rest.
 
-            ### Path 2 — Desktop CLI (developers)
+            ### Path 4 — Desktop CLI (developers)
 
             Download `toneai-nux-imprint-desktop-v${{ steps.version.outputs.VERSION }}.zip`, extract, open the folder in any supported agent CLI, say hello — ToneAI handles the rest.
 
@@ -333,32 +354,15 @@ jobs:
 
             On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 
-            ### Path 3 — Claude web and mobile (Claude Skill) — EASIEST
-
-            **Download: `toneai-nux-skill-v${{ steps.version.outputs.VERSION }}.zip`** (below, under Assets — it's the small one, about 600 KB).
-
-            Then, in Claude:
-
-            1. Go to **claude.ai** and sign in (Pro, Max, Team or Enterprise — Skills aren't on the free plan).
-            2. Open **Settings → Capabilities → Skills**.
-            3. Click **Upload skill** and pick the ZIP. Don't unzip it first.
-            4. Done. ToneAI is now in **every** chat, web and mobile app.
-
-            Ask for a tone — *"dial in the Comfortably Numb solo, I'm on a Mighty Plug Pro with a Les Paul"* — and it hands you the QR. Scan it in the NUX app.
-
-            No install on your machine, nothing to attach, no re-prompting each chat. It asks once which NUX device and pickups you have, then remembers.
-
-            The skill carries its own QR generator, so it runs entirely inside Claude's sandbox — no network, no dependencies. Presets are byte-identical to the desktop app's: same encoder.
-
             ## Not supported
 
             | Surface | Status |
             |---|---|
-            | Claude Projects | ❌ ZIP uploads not accepted — use the Skill (Path 3) instead |
+            | Claude Projects | ❌ ZIP uploads not accepted — use the Skill (Path 1) instead |
             | ChatGPT web | ❌ Safety layer rejects the persona-takeover pattern |
             | Gemini web | ❌ Emits a JSON output file instead of running as ToneAI |
 
-            If none of the three paths fit your environment, use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
+            If none of these paths fit your environment, use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
           files: release-assets/**/*
           draft: false
           prerelease: false
