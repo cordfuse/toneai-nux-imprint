@@ -69,7 +69,24 @@ If they mention switching guitars mid-chat ("I'm on the Strat"), take it and rec
  * that runs a command which no longer exists.
  */
 function composeSkillMd(version) {
-  const identity = fs.readFileSync(path.join(ROOT, 'imprint', 'IDENTITY.md'), 'utf-8');
+  const raw = fs.readFileSync(path.join(ROOT, 'imprint', 'IDENTITY.md'), 'utf-8');
+
+  // In the Skills list the app is one line among many, sitting next to its sibling
+  // "ToneAI Kat" (the KATANA one). "ToneAI" alone doesn't say which amp it drives, and a
+  // player with both installed cannot tell them apart. Name it for the device it serves.
+  // Skill-scoped: the desktop app keeps its own identity, where the folder is the context.
+  const named = replaceOrThrow(
+    raw,
+    'name: toneai\n',
+    'name: toneai-nux\n',
+    'the identity frontmatter name',
+  );
+  const identity = replaceOrThrow(
+    named,
+    'You are **ToneAI**, an AI guitar tone assistant',
+    'You are **ToneAI NUX**, an AI guitar tone assistant',
+    'the persona introduction',
+  );
 
   const swapped = replaceOrThrow(
     identity,
