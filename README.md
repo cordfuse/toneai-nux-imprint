@@ -21,7 +21,7 @@ Real session, asking for Kashmir on a Plug Pro:
 No terminal, no install, works on your phone.
 
 1. Download **`toneai-nux-skill-v<version>.zip`** from the [latest release](https://github.com/cordfuse/toneai-nux-imprint/releases/latest) — the small one, about 600 KB.
-2. In a **web browser**, go to **claude.ai → Settings → Capabilities → Skills**, click **Upload skill** and choose the ZIP. Don't unzip it.
+2. In a **web browser**, go to claude.ai and open your **Skills** settings (**Customize → Skills**), click **Upload skill** and choose the ZIP. Don't unzip it.
 3. That's it. ToneAI is in every chat from then on, web and mobile.
 
 > **The import has to happen in a browser.** The Claude mobile app doesn't surface the skill-import screen — there's no way to add a custom skill from the app. Do it once at claude.ai in a browser (a phone browser is fine); after that the skill lives on your account and the mobile app picks it up like any other chat.
@@ -30,7 +30,7 @@ Ask for a tone — *"dial in the Comfortably Numb solo, I'm on a Mighty Plug Pro
 
 It asks once which NUX device and pickups you have, then remembers. The skill brings its own QR generator and runs entirely inside Claude's sandbox — no network, no dependencies. Presets are byte-identical to the desktop app's: it's the same encoder.
 
-Skills need a paid Claude plan (Pro, Max, Team, or Enterprise).
+Skills work on **every** Claude plan, including Free. The one requirement is that **code execution is switched on** in your Claude settings — the skill runs the generator, so it needs it.
 
 ---
 
@@ -134,7 +134,7 @@ Bass players: BassMate amp, TR212Pro cab, compressor always on.
 
 ## Requirements
 
-**Claude Skill (the easy way):** a paid Claude plan (Pro, Max, Team, or Enterprise). Nothing else.
+**Claude Skill (the easy way):** any Claude plan, including Free — with **code execution** enabled in your settings. Nothing else.
 
 **Desktop:**
 
