@@ -43,12 +43,12 @@ const SMOKE_PRESET = {
 function composeSkillMd(version) {
   const identity = fs.readFileSync(path.join(ROOT, 'imprint', 'IDENTITY.md'), 'utf-8');
 
-  // The app's offline fallback points at skill/nux-qr-tool.js, which is where the ZIP
-  // puts it. In the skill itself the generator sits right next to SKILL.md, so that path
-  // is wrong here — strip the block. The "Running here" section below says the same thing
+  // The app's offline fallback points at tool/nux-qr-tool.js, which is where the app ZIP
+  // puts it. In the skill the generator sits right next to SKILL.md, so that path is
+  // wrong here — strip the block. The "Running here" section below says the same thing
   // with the correct path.
   const stripped = identity.replace(
-    /\n<!-- OFFLINE_FALLBACK -->\n[\s\S]*?```bash\nnode skill\/nux-qr-tool\.js \.\/preset\.json\n```\n/,
+    /\n<!-- OFFLINE_FALLBACK -->\n[\s\S]*?```bash\nnode tool\/nux-qr-tool\.js \.\/preset\.json\n```\n/,
     '',
   );
   if (stripped === identity) {
@@ -86,20 +86,50 @@ You are running as a Claude Skill, in a sandbox. Two things follow from that:
   );
 }
 
-function buildSkill(outDir, version) {
+/**
+ * Vendors the generator into the app itself (dist/tool/), for the offline fallback in
+ * IDENTITY.md. This is the ONLY generator the app ZIP carries.
+ *
+ * Deliberately NOT the skill package: that lives outside dist/, because the skill's
+ * SKILL.md is a second copy of ToneAI's persona and shipping it inside the app would put
+ * two identity documents in one tree for the agent to trip over.
+ */
+function vendorTool(appDir) {
+  requireTool();
+  const dest = path.join(appDir, 'tool');
+  fs.mkdirSync(dest, { recursive: true });
+  fs.copyFileSync(TOOL, path.join(dest, 'nux-qr-tool.js'));
+  smokeRun(path.join(dest, 'nux-qr-tool.js'));
+  return { bytes: fs.statSync(path.join(dest, 'nux-qr-tool.js')).size };
+}
+
+function requireTool() {
   if (!fs.existsSync(TOOL)) {
     throw new Error(`@cordfuse/nux-qr-tool is not installed (expected ${TOOL}) — run npm ci`);
   }
+}
+
+function buildSkill(outDir, version) {
+  requireTool();
+  fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
 
   fs.copyFileSync(TOOL, path.join(outDir, 'nux-qr-tool.js'));
   fs.writeFileSync(path.join(outDir, 'SKILL.md'), composeSkillMd(version), 'utf-8');
+  smokeRun(path.join(outDir, 'nux-qr-tool.js'));
 
-  // Smoke-run the vendored generator exactly the way the skill will: bare `node`, one
-  // file, no node_modules, no network.
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'toneai-skill-smoke-'));
+  return { bytes: fs.statSync(path.join(outDir, 'nux-qr-tool.js')).size };
+}
+
+/**
+ * Run the vendored generator the way it will actually be run: bare `node`, one file, an
+ * empty directory, no node_modules, no network. Throws if it doesn't produce a PNG — we
+ * don't ship a generator we haven't just watched work.
+ */
+function smokeRun(toolPath) {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'toneai-smoke-'));
   try {
-    fs.copyFileSync(path.join(outDir, 'nux-qr-tool.js'), path.join(tmp, 'nux-qr-tool.js'));
+    fs.copyFileSync(toolPath, path.join(tmp, 'nux-qr-tool.js'));
     fs.writeFileSync(path.join(tmp, 'preset.json'), JSON.stringify(SMOKE_PRESET), 'utf-8');
     execFileSync(process.execPath, ['nux-qr-tool.js', 'preset.json', '--output', '.'], {
       cwd: tmp,
@@ -111,8 +141,6 @@ function buildSkill(outDir, version) {
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }
-
-  return { bytes: fs.statSync(path.join(outDir, 'nux-qr-tool.js')).size };
 }
 
-module.exports = { buildSkill };
+module.exports = { buildSkill, vendorTool };

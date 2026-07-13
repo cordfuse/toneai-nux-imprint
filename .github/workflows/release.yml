@@ -69,8 +69,8 @@ jobs:
       - name: Package Claude Skill
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
-          cd dist/skill
-          zip -r "../../toneai-nux-skill-v${VERSION}.zip" .
+          cd dist-skill
+          zip -r "../toneai-nux-skill-v${VERSION}.zip" .
 
       - name: Install dependencies for full release
         run: npm install --production

@@ -8,3 +8,4 @@ node_modules/
 setup/toneai-nux
 
 .env
+dist-skill/
