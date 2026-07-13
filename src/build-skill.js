@@ -43,7 +43,19 @@ const SMOKE_PRESET = {
 function composeSkillMd(version) {
   const identity = fs.readFileSync(path.join(ROOT, 'imprint', 'IDENTITY.md'), 'utf-8');
 
-  const swapped = identity.replace(
+  // The app's offline fallback points at skill/nux-qr-tool.js, which is where the ZIP
+  // puts it. In the skill itself the generator sits right next to SKILL.md, so that path
+  // is wrong here — strip the block. The "Running here" section below says the same thing
+  // with the correct path.
+  const stripped = identity.replace(
+    /\n<!-- OFFLINE_FALLBACK -->\n[\s\S]*?```bash\nnode skill\/nux-qr-tool\.js \.\/preset\.json\n```\n/,
+    '',
+  );
+  if (stripped === identity) {
+    throw new Error('IDENTITY.md offline-fallback block not found — SKILL.md would ship a generator path that does not exist in the skill');
+  }
+
+  const swapped = stripped.replace(
     'npx @cordfuse/nux-qr-tool ./preset.json',
     'node nux-qr-tool.js ./preset.json --app-name "ToneAI" --app-version "' + version + '"',
   );
