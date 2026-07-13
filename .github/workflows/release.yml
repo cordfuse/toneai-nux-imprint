@@ -285,7 +285,7 @@ jobs:
             Then, in Claude:
 
             1. Go to **claude.ai in a web browser** and sign in. (Any plan, including Free. Make sure **code execution** is enabled in your settings — the skill needs it to run the generator.)
-            2. Open **Skills** in your settings (**Customize → Skills**, or **Settings → Capabilities → Skills**).
+            2. Open **Settings → Skills** (it sits beneath Customize).
             3. Click **Upload skill** and choose the ZIP. Don't unzip it first.
             4. That's it. ToneAI is now in **every** chat, on the web and in the Claude mobile app.
 
