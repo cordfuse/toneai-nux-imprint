@@ -1,0 +1,11 @@
+{
+  "name": "toneai-nux-imprint",
+  "description": "ToneAI — AI NUX MightyAmp tone assistant built on Imprint",
+  "version": "0.0.0-see-version.txt",
+  "author": "Steve Krisjanovs",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@cordfuse/nux-qr-tool": "^1.5.0"
+  }
+}
