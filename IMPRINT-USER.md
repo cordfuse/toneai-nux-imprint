@@ -51,7 +51,7 @@ ToneAI is the canonical reference implementation of an Imprint app. It demonstra
 1. The user tells ToneAI what song, album, or artist they want to dial in
 2. ToneAI uses its built-in web search to research per-recording gear (amp, guitar, effects)
 3. ToneAI writes a preset JSON file to `./output/preset.json`
-4. ToneAI calls `npx tsx src/qr-generator.ts ./output/preset.json` to encode and save the QR image
+4. ToneAI calls `npx @cordfuse/nux-qr-tool ./output/preset.json` to encode and save the QR image
 5. QR image is saved to `./output/<artist>-<song>.png` and copied to the user's output folder
 
 ### Preset JSON Format

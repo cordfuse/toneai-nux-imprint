@@ -49,20 +49,30 @@ claude        # or: gemini / agy / codex / opencode
 
 On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 
-### Not supported
+## Claude web and mobile — the Claude Skill
 
-ToneAI requires a CLI agent with local filesystem access. Tested 2026-05-04:
+No install, no CLI, works on your phone.
+
+1. Download **`toneai-nux-skill-v<version>.zip`** from the [latest release](https://github.com/cordfuse/toneai-nux-imprint/releases/latest) — the small one, about 600 KB.
+2. At **claude.ai → Settings → Capabilities → Skills**, click **Upload skill** and pick the ZIP. Don't unzip it.
+3. That's it. ToneAI is in every chat from then on, web and mobile.
+
+The skill carries its own QR generator and runs entirely inside Claude's sandbox — no network, no dependencies. Presets are byte-identical to the desktop app's: it is the same encoder. It asks once which NUX device and pickups you have, then remembers.
+
+Skills need a paid Claude plan (Pro, Max, Team, or Enterprise).
+
+### Not supported
 
 | Surface | Status |
 |---|---|
 | Claude Desktop (Chat / Cowork / Projects) | ❌ Hardened against persona injection — refuses pipe install, blocks IMPRINT.md as a jailbreak vector, Cowork has a locked system prompt |
 | ChatGPT Desktop | ❌ Sandboxed — no local network or filesystem access |
 | Gemini Desktop | ❌ Requires manual project seeding each session — not viable as a recurring tool |
-| Claude.ai web/mobile | ❌ Each new chat requires re-attaching ZIP and re-prompting |
+| Claude Projects | ❌ ZIP uploads not accepted — use the Skill above |
 | ChatGPT web | ❌ Safety layer rejects the persona-takeover pattern |
 | Gemini web | ❌ Emits a JSON output file instead of running as ToneAI |
 
-If you can't run a CLI agent, use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
+If none of these fit, use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
 
 ---
 

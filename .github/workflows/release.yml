@@ -6,8 +6,9 @@ name: Release
 #   - install.sh / install.ps1                 (pipe-installer bootstrap, stable name)
 #   - toneai-nux-imprint.ts                           (TypeScript setup wizard, stable name)
 #   - toneai-nux-imprint-source.zip                         (lean desktop bundle, stable name)
-#   - toneai-nux-imprint-desktop-v*.zip   (lean desktop, runtime npm install)
-#   - toneai-nux-imprint-v*.zip           (full ZIP, ~27MB, mobile-compatible)
+#   - toneai-nux-imprint-desktop-v*.zip   (lean desktop, for an agent CLI)
+#   - toneai-nux-skill-v*.zip             (Claude Skill — SKILL.md + the QR generator;
+#                                          import at claude.ai for ToneAI in Claude web)
 #   - toneai-nux-imprint-{linux-x64,win-x64.exe,mac-arm64,mac-x64}  (Bun-compiled binaries)
 #   - toneai-nux-imprint.exe                          (Inno Setup Windows installer)
 #   - toneai-nux-imprint-{VERSION}-macos.pkg          (macOS pkg)
@@ -43,6 +44,11 @@ jobs:
         with:
           node-version: '20'
 
+      # src/build.js vendors the QR generator into the Claude Skill, so the toolchain
+      # has to be installed before it runs.
+      - name: Install build dependencies
+        run: npm ci
+
       - name: Build
         run: node src/build.js
 
@@ -57,16 +63,17 @@ jobs:
           cd dist
           zip -r "../${REPO_NAME}-desktop-v${VERSION}.zip" .
 
-      - name: Install dependencies for full release
-        run: npm install --production
-        working-directory: dist
-
-      - name: Package full release (with node_modules — mobile compatible)
+      # ToneAI in Claude web. SKILL.md + the QR generator in one ZIP, imported at
+      # claude.ai under Settings > Capabilities > Skills.
+      #
+      # This REPLACES the old "full" ~27MB ZIP (dist + node_modules), which was built to
+      # be uploaded into a chat. It never could be: claude.ai projects do not accept .zip
+      # uploads. The skill is the supported route, and it is the one that works.
+      - name: Package Claude Skill
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
-          REPO_NAME="toneai-nux-imprint"   # all distributable artifacts carry the toneai-nux-imprint name (full rename, v1.4.3+)
-          cd dist
-          zip -r "../${REPO_NAME}-v${VERSION}.zip" .
+          cd dist-skill
+          zip -r "../toneai-nux-skill-v${VERSION}.zip" .
 
       - name: Stage pipe-installer assets (stable filenames for releases/latest/download/)
         run: |
@@ -267,6 +274,8 @@ jobs:
 
             Tell ToneAI what song or artist you want to sound like. It builds a NUX MightyAmp preset and saves a QR code you scan into the NUX app. Uses your existing AI subscription — no extra API key.
 
+            > **Just want to use it?** Grab **`toneai-nux-skill-v${{ steps.version.outputs.VERSION }}.zip`** and import it into claude.ai as a Skill — see **Path 3** below. Nothing to install, works on your phone, takes a minute. The other paths are for running ToneAI in an agent CLI on a desktop.
+
             ## Install
 
             ### Path 0 — Pipe installer (recommended)
@@ -309,7 +318,7 @@ jobs:
 
             ### Path 2 — Desktop CLI (developers)
 
-            Download `toneai-nux-imprint-desktop-v${{ steps.version.outputs.VERSION }}.zip`, extract, open the folder in any supported agent CLI, say hello — ToneAI handles the rest. First launch installs `node_modules` automatically.
+            Download `toneai-nux-imprint-desktop-v${{ steps.version.outputs.VERSION }}.zip`, extract, open the folder in any supported agent CLI, say hello — ToneAI handles the rest.
 
             **Supported agents (any desktop OS — Mac, Windows, Linux):**
 
@@ -324,18 +333,32 @@ jobs:
 
             On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
 
-            ## Not supported
+            ### Path 3 — Claude web and mobile (Claude Skill) — EASIEST
 
-            Web/mobile chat clients are not viable for ToneAI as a recurring tool. Tested 2026-05-04:
+            **Download: `toneai-nux-skill-v${{ steps.version.outputs.VERSION }}.zip`** (below, under Assets — it's the small one, about 600 KB).
+
+            Then, in Claude:
+
+            1. Go to **claude.ai** and sign in (Pro, Max, Team or Enterprise — Skills aren't on the free plan).
+            2. Open **Settings → Capabilities → Skills**.
+            3. Click **Upload skill** and pick the ZIP. Don't unzip it first.
+            4. Done. ToneAI is now in **every** chat, web and mobile app.
+
+            Ask for a tone — *"dial in the Comfortably Numb solo, I'm on a Mighty Plug Pro with a Les Paul"* — and it hands you the QR. Scan it in the NUX app.
+
+            No install on your machine, nothing to attach, no re-prompting each chat. It asks once which NUX device and pickups you have, then remembers.
+
+            The skill carries its own QR generator, so it runs entirely inside Claude's sandbox — no network, no dependencies. Presets are byte-identical to the desktop app's: same encoder.
+
+            ## Not supported
 
             | Surface | Status |
             |---|---|
-            | Claude.ai web/mobile chat | ⚠️ Technically works as a one-off, but each new chat requires re-attaching the ZIP and re-prompting. Use Path 1 or Path 2 for repeat use. |
-            | Claude Projects | ❌ ZIP uploads not accepted; GitHub-as-knowledge connection doesn't run as the persona |
+            | Claude Projects | ❌ ZIP uploads not accepted — use the Skill (Path 3) instead |
             | ChatGPT web | ❌ Safety layer rejects the persona-takeover pattern |
             | Gemini web | ❌ Emits a JSON output file instead of running as ToneAI |
 
-            If you can't install Path 1 or Path 2, ToneAI isn't the right shape for your environment. Use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
+            If none of the three paths fit your environment, use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
           files: release-assets/**/*
           draft: false
           prerelease: false
@@ -354,6 +377,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+
+      - name: Install build dependencies
+        run: npm ci
 
       - name: Build dist
         run: node src/build.js
