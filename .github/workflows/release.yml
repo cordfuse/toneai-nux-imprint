@@ -1,25 +1,17 @@
 name: Release
 
-# Single unified release pipeline. Fires on every v* tag push and produces a
-# single GitHub release with ALL artifacts:
+# Pure-Node release. Fires on every v* tag and produces one GitHub release with
+# exactly two assets:
 #
-#   - install.sh / install.ps1                 (pipe-installer bootstrap, stable name)
-#   - toneai-nux-imprint.ts                           (TypeScript setup wizard, stable name)
-#   - toneai-nux-imprint-source.zip                         (lean desktop bundle, stable name)
-#   - toneai-nux-imprint-desktop-v*.zip   (lean desktop, for an agent CLI)
-#   - toneai-nux-skill-v*.zip             (Claude Skill — SKILL.md + the QR generator;
-#                                          import at claude.ai for ToneAI in Claude web)
-#   - toneai-nux-imprint-{linux-x64,win-x64.exe,mac-arm64,mac-x64}  (Bun-compiled binaries)
-#   - toneai-nux-imprint.exe                          (Inno Setup Windows installer)
-#   - toneai-nux-imprint-{VERSION}-macos.pkg          (macOS pkg)
-#   - toneai-nux-imprint-{VERSION}_amd64.deb          (Debian package)
-#   - toneai-nux-imprint-{VERSION}-1.x86_64.rpm       (RPM package)
+#   - toneai-nux-skill-v*.zip        (Claude Skill — SKILL.md + the QR generator;
+#                                     import at claude.ai for ToneAI in Claude web)
+#   - toneai-nux-imprint-v*.zip      (desktop bundle — open in an agent CLI)
 #
-# Plus an automated update to the homebrew tap formula.
-#
-# Replaces the previous setup-release.yml workflow that lived on a static
-# 'setup-release' tag. Consolidating eliminates the dual-release confusion
-# (Latest-flag bug, ugly tag name, two release pages per version).
+# No compiled binaries, no OS installers, no Homebrew. The generator is plain
+# JavaScript that runs on a bare Node, so distribution is just source in a ZIP.
+# The setup wizard, the Bun-compiled binaries, the deb/rpm/pkg/exe installers and
+# the pipe installer were all retired in favour of this model (mirrors the
+# toneai-katana-imprint release).
 
 on:
   push:
@@ -27,13 +19,10 @@ on:
       - 'v*'
 
 jobs:
-
-  # ── Product ZIPs ──────────────────────────────────────────────────────────
-  build-product:
-    name: Build product ZIPs
+  release:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
 
     steps:
       - name: Checkout
@@ -44,8 +33,8 @@ jobs:
         with:
           node-version: '20'
 
-      # src/build.js vendors the QR generator into the Claude Skill, so the toolchain
-      # has to be installed before it runs.
+      # src/build.js vendors @cordfuse/nux-qr-tool into the skill, so the dep has
+      # to be installed before the build runs.
       - name: Install build dependencies
         run: npm ci
 
@@ -56,436 +45,61 @@ jobs:
         id: version
         run: echo "VERSION=$(cat version.txt)" >> "$GITHUB_OUTPUT"
 
-      - name: Package desktop release (lean — no node_modules)
+      - name: Package desktop bundle
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
-          REPO_NAME="toneai-nux-imprint"   # all distributable artifacts carry the toneai-nux-imprint name (full rename, v1.4.3+)
+          REPO_NAME="${{ github.event.repository.name }}"
           cd dist
-          zip -r "../${REPO_NAME}-desktop-v${VERSION}.zip" .
+          zip -r "../${REPO_NAME}-v${VERSION}.zip" .
 
-      # ToneAI in Claude web. SKILL.md + the QR generator in one ZIP, imported at
-      # claude.ai under Settings > Capabilities > Skills.
-      #
-      # This REPLACES the old "full" ~27MB ZIP (dist + node_modules), which was built to
-      # be uploaded into a chat. It never could be: claude.ai projects do not accept .zip
-      # uploads. The skill is the supported route, and it is the one that works.
+      # ToneAI in Claude web and on a phone. SKILL.md + the QR generator, in one
+      # ZIP imported at claude.ai under Settings > Skills. No install, no terminal.
+      # The sandbox runs the same generator the desktop app runs, so the presets
+      # are byte-identical.
       - name: Package Claude Skill
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
           cd dist-skill
           zip -r "../toneai-nux-skill-v${VERSION}.zip" .
 
-      - name: Stage pipe-installer assets (stable filenames for releases/latest/download/)
-        run: |
-          VERSION="${{ steps.version.outputs.VERSION }}"
-          REPO_NAME="toneai-nux-imprint"   # all distributable artifacts carry the toneai-nux-imprint name (full rename, v1.4.3+)
-          # Source ZIP — same content as desktop ZIP, stable filename (no version)
-          cp "${REPO_NAME}-desktop-v${VERSION}.zip" toneai-nux-imprint-source.zip
-          # Wizard TypeScript source — fetched by install.sh / install.ps1
-          cp setup/src/index.ts toneai-nux-imprint.ts
-          # install.sh and install.ps1 already at workspace root (from checkout)
-
-      - name: Upload product ZIPs + pipe-installer assets as artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: product-zips
-          path: |
-            *-v*.zip
-            toneai-nux-imprint-source.zip
-            toneai-nux-imprint.ts
-            install.sh
-            install.ps1
-
-  # ── Setup wizard binaries (Bun compile, 4 platforms) ─────────────────────
-  build-setup-binaries:
-    name: Build setup binary ${{ matrix.target }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            target: linux-x64
-            binary: toneai-nux-imprint-linux-x64
-            bun_target: bun-linux-x64
-          - os: windows-latest
-            target: win-x64
-            binary: toneai-nux-imprint-win-x64.exe
-            bun_target: bun-windows-x64
-          - os: macos-latest
-            target: mac-arm64
-            binary: toneai-nux-imprint-mac-arm64
-            bun_target: bun-darwin-arm64
-          - os: macos-latest
-            target: mac-x64
-            binary: toneai-nux-imprint-mac-x64
-            bun_target: bun-darwin-x64
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Build binary
-        working-directory: setup
-        run: bun build src/index.ts --compile --target=${{ matrix.bun_target }} --outfile ../${{ matrix.binary }}
-
-      - name: Upload binary artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.binary }}
-          path: ${{ matrix.binary }}
-
-  # ── Setup wizard OS installers (4 targets, depends on binaries) ──────────
-  build-setup-installers:
-    name: Build setup installer ${{ matrix.target }}
-    needs: build-setup-binaries
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: windows-latest
-            target: win
-          - os: macos-latest
-            target: mac
-          - os: ubuntu-latest
-            target: deb
-          - os: ubuntu-latest
-            target: rpm
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Get version
-        id: version
-        shell: bash
-        run: echo "VERSION=$(cat version.txt | tr -d '[:space:]')" >> $GITHUB_OUTPUT
-
-      # ── Windows — Inno Setup ──────────────────────────────────────────────
-      - name: Download Windows binary
-        if: matrix.target == 'win'
-        uses: actions/download-artifact@v4
-        with:
-          name: toneai-nux-imprint-win-x64.exe
-
-      - name: Build Windows installer
-        if: matrix.target == 'win'
-        shell: pwsh
-        run: |
-          choco install innosetup -y
-          iscc /DMyAppVersion="${{ steps.version.outputs.VERSION }}" installers\windows\setup.iss
-
-      - name: Upload Windows installer
-        if: matrix.target == 'win'
-        uses: actions/upload-artifact@v4
-        with:
-          name: toneai-nux-imprint-${{ steps.version.outputs.VERSION }}-windows
-          path: installers/windows/Output/*.exe
-
-      # ── macOS pkg ─────────────────────────────────────────────────────────
-      - name: Download macOS binaries
-        if: matrix.target == 'mac'
-        uses: actions/download-artifact@v4
-        with:
-          pattern: toneai-nux-imprint-mac-*
-          merge-multiple: true
-
-      - name: Build macOS pkg
-        if: matrix.target == 'mac'
-        run: |
-          chmod +x toneai-nux-imprint-mac-arm64 toneai-nux-imprint-mac-x64
-          bash installers/macos/build-pkg.sh ${{ steps.version.outputs.VERSION }}
-
-      - name: Upload macOS pkg
-        if: matrix.target == 'mac'
-        uses: actions/upload-artifact@v4
-        with:
-          name: toneai-nux-imprint-${{ steps.version.outputs.VERSION }}-macos
-          path: installers/macos/dist/*.pkg
-
-      # ── Linux .deb ────────────────────────────────────────────────────────
-      - name: Download Linux binary
-        if: matrix.target == 'deb'
-        uses: actions/download-artifact@v4
-        with:
-          name: toneai-nux-imprint-linux-x64
-
-      - name: Build .deb
-        if: matrix.target == 'deb'
-        run: bash installers/linux/build-deb.sh ${{ steps.version.outputs.VERSION }}
-
-      - name: Upload .deb
-        if: matrix.target == 'deb'
-        uses: actions/upload-artifact@v4
-        with:
-          name: toneai-nux-imprint-${{ steps.version.outputs.VERSION }}-linux-deb
-          path: installers/linux/dist/*.deb
-
-      # ── Linux .rpm ────────────────────────────────────────────────────────
-      - name: Download Linux binary (rpm)
-        if: matrix.target == 'rpm'
-        uses: actions/download-artifact@v4
-        with:
-          name: toneai-nux-imprint-linux-x64
-
-      - name: Install rpm tools
-        if: matrix.target == 'rpm'
-        run: sudo apt-get install -y rpm
-
-      - name: Build .rpm
-        if: matrix.target == 'rpm'
-        run: bash installers/linux/build-rpm.sh ${{ steps.version.outputs.VERSION }}
-
-      - name: Upload .rpm
-        if: matrix.target == 'rpm'
-        uses: actions/upload-artifact@v4
-        with:
-          name: toneai-nux-imprint-${{ steps.version.outputs.VERSION }}-linux-rpm
-          path: installers/linux/dist/*.rpm
-
-  # ── Single release: product ZIPs + all setup artifacts ───────────────────
-  release:
-    name: Create GitHub Release
-    needs: [build-product, build-setup-installers]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Get version
-        id: version
-        run: echo "VERSION=$(cat version.txt | tr -d '[:space:]')" >> $GITHUB_OUTPUT
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: release-assets
-          merge-multiple: true
-
-      - name: Create release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: ToneAI v${{ steps.version.outputs.VERSION }}
+          generate_release_notes: true
           body: |
-            ## ToneAI v${{ steps.version.outputs.VERSION }}
-
-            Tell ToneAI what song or artist you want to sound like. It builds a NUX MightyAmp preset and saves a QR code you scan into the NUX app. Uses your existing AI subscription — no extra API key.
-
             ## Install
 
-            ### Path 1 — Claude web and mobile (Claude Skill) — START HERE
+            ### Claude web and mobile (Claude Skill) — START HERE
 
-            **No terminal, no install, works on your phone.** This is the easiest way to use ToneAI, and for most players it's the only one they'll need.
+            **No terminal, no install, works on your phone.** The easiest way to use ToneAI, and for most players the only one they'll need.
 
-            **Download `toneai-nux-skill-v${{ steps.version.outputs.VERSION }}.zip`** from the Assets below — the small one, about 600 KB.
-
-            Then, in Claude:
+            **Download `toneai-nux-skill-v${{ steps.version.outputs.VERSION }}.zip`** from the Assets below — about 600 KB.
 
             1. Go to **claude.ai in a web browser** and sign in. (Any plan, including Free. Make sure **code execution** is enabled in your settings — the skill needs it to run the generator.)
             2. Open **Settings → Skills** (it sits beneath Customize).
             3. Click **Upload skill** and choose the ZIP. Don't unzip it first.
-            4. That's it. ToneAI is now in **every** chat, on the web and in the Claude mobile app.
+            4. Done. ToneAI is now in **every** chat, on the web and in the Claude mobile app.
 
             > **Import from a browser.** The Claude mobile app has no way to add a custom skill — it does not surface the import screen. Do this once at claude.ai in a browser (a phone browser works). After that the skill is on your account and the mobile app picks it up like any other chat.
 
-            Ask for a tone — *"dial in the Comfortably Numb solo, I'm on a Mighty Plug Pro with a Les Paul"* — and it hands you the QR code. Scan it in the NUX app and play.
+            Ask for a tone — *"dial in the Comfortably Numb solo, I'm on a Mighty Plug Pro with a Les Paul"* — and it hands you a QR code. Scan it in the NUX app and play.
 
-            It asks once which NUX device and pickups you have, then remembers. Nothing to re-attach, nothing to re-prompt.
+            It asks once which NUX device and pickups you have, then remembers.
 
-            The skill brings its own QR generator and runs entirely inside Claude's sandbox — no network, no dependencies. The presets are byte-identical to the desktop app's: it's the same encoder.
+            ### Desktop (agent CLI)
 
-            ---
+            For local files and offline use. **This needs Node.js and a command line** — if that's not for you, the skill above gives you the same tones.
 
-            **The paths below run ToneAI in a terminal on your desktop.** They give you local files and offline use, and they need a command line. If that's not you, stop at Path 1 — you're not missing any tones.
+            1. **Install Node.js first** if you don't have it — [nodejs.org](https://nodejs.org) (any current LTS).
+            2. Download `toneai-nux-imprint-v${{ steps.version.outputs.VERSION }}.zip`, extract it, and open the folder in an agent CLI (Claude Code, Gemini CLI, Codex, OpenCode). Say hello — ToneAI handles the rest.
 
-            ### Path 2 — Pipe installer
-
-            **macOS / Linux:**
-            ```
-            curl -fsSL https://github.com/cordfuse/toneai-nux-imprint/releases/latest/download/install.sh | bash
-            ```
-
-            **Windows (PowerShell):**
-            ```
-            irm https://github.com/cordfuse/toneai-nux-imprint/releases/latest/download/install.ps1 | iex
-            ```
-
-            One-liner. Installs Bun if missing, fetches the setup wizard, downloads ToneAI into `~/toneai`, prints how to launch it. No signed-installer permissions, no manual download, always picks up the latest release.
-
-            ### Path 3 — Setup wizard binary
-
-            **Windows:** Download and run `toneai-nux-imprint.exe`
-
-            **macOS:**
-            ```
-            brew tap cordfuse/tools
-            brew install toneai-nux-imprint
-            toneai-nux-imprint
-            ```
-            Or download `toneai-nux-imprint-${{ steps.version.outputs.VERSION }}-macos.pkg` — right-click → Open to bypass Gatekeeper.
-
-            **Linux (Debian/Ubuntu):**
-            ```
-            sudo dpkg -i toneai-nux-imprint_${{ steps.version.outputs.VERSION }}_amd64.deb
-            ```
-
-            **Linux (Fedora/RHEL):**
-            ```
-            sudo rpm -i toneai-nux-imprint-${{ steps.version.outputs.VERSION }}-1.x86_64.rpm
-            ```
-
-            Run `toneai-nux-imprint` — the wizard handles the rest.
-
-            ### Path 4 — Desktop CLI (developers)
-
-            Download `toneai-nux-imprint-desktop-v${{ steps.version.outputs.VERSION }}.zip`, extract, open the folder in any supported agent CLI, say hello — ToneAI handles the rest.
-
-            **Supported agents (any desktop OS — Mac, Windows, Linux):**
-
-            | Agent | Command | Notes |
-            |---|---|---|
-            | Claude Code | `claude` | Anthropic's CLI |
-            | Gemini CLI | `gemini` | Google's official CLI |
-            | Codex CLI | `codex` | OpenAI's CLI |
-            | OpenCode | `opencode` | Open-source alternative |
+            No build step: the QR generator is plain JavaScript and runs on a bare Node, with no dependencies and no network calls.
 
             ---
 
-            On first launch ToneAI asks which NUX device you have, where to save QR images, and whether you play guitar or bass. After that it goes straight to work each session.
-
-            ## Not supported
-
-            | Surface | Status |
-            |---|---|
-            | Claude Projects | ❌ ZIP uploads not accepted — use the Skill (Path 1) instead |
-            | ChatGPT web | ❌ Safety layer rejects the persona-takeover pattern |
-            | Gemini web | ❌ Emits a JSON output file instead of running as ToneAI |
-
-            If none of these paths fit your environment, use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
-          files: release-assets/**/*
+            If neither path fits your environment, use the [Mighty AI QR web app](https://mighty-ai-qr-web.onrender.com) — same NUX-tone-from-prompt experience, browser-hosted, no install.
+          files: |
+            *-v*.zip
+            dist/.imprint-checksum
           draft: false
           prerelease: false
-
-  # ── Push dist/ to dist branch (enables jsDelivr + codeload ZIP URL) ─────
-  push-dist-branch:
-    name: Push dist branch
-    needs: release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install build dependencies
-        run: npm ci
-
-      - name: Build dist
-        run: node src/build.js
-
-      - name: Push dist/ to dist branch
-        run: |
-          cd dist
-          git init
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "dist: v$(cat ../version.txt)"
-          git push --force \
-            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
-            HEAD:refs/heads/dist
-
-  # ── Homebrew tap update ──────────────────────────────────────────────────
-  update-homebrew:
-    name: Update Homebrew formula
-    needs: release
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout toneai repo
-        uses: actions/checkout@v4
-
-      - name: Get version
-        id: version
-        run: echo "VERSION=$(cat version.txt | tr -d '[:space:]')" >> $GITHUB_OUTPUT
-
-      - name: Download macOS binaries for sha256
-        uses: actions/download-artifact@v4
-        with:
-          pattern: toneai-nux-imprint-mac-*
-          merge-multiple: true
-
-      - name: Compute sha256 hashes
-        id: hashes
-        run: |
-          echo "ARM64=$(sha256sum toneai-nux-imprint-mac-arm64 | awk '{print $1}')" >> $GITHUB_OUTPUT
-          echo "X64=$(sha256sum toneai-nux-imprint-mac-x64 | awk '{print $1}')" >> $GITHUB_OUTPUT
-
-      - name: Checkout homebrew tap
-        uses: actions/checkout@v4
-        with:
-          repository: cordfuse/homebrew-tools
-          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
-          path: homebrew-tools
-
-      - name: Update formula
-        run: |
-          VERSION=${{ steps.version.outputs.VERSION }}
-          SHA256_ARM64=${{ steps.hashes.outputs.ARM64 }}
-          SHA256_X64=${{ steps.hashes.outputs.X64 }}
-          TAG=${{ github.ref_name }}
-
-          mkdir -p homebrew-tools/Formula
-          cat > homebrew-tools/Formula/toneai-nux-imprint.rb << 'FORMULA'
-          # Formula for homebrew-tools tap: cordfuse/homebrew-tools
-          # To install:
-          #   brew tap cordfuse/tools
-          #   brew install toneai-nux-imprint
-
-          class ToneaiNuxImprint < Formula
-            desc "Setup wizard for ToneAI — AI-powered NUX MightyAmp tone assistant"
-            homepage "https://github.com/cordfuse/toneai-nux-imprint"
-            version "VERSION_PLACEHOLDER"
-            license "MIT"
-
-            on_macos do
-              on_arm do
-                url "https://github.com/cordfuse/toneai-nux-imprint/releases/download/TAG_PLACEHOLDER/toneai-nux-imprint-mac-arm64"
-                sha256 "ARM64_PLACEHOLDER"
-              end
-              on_intel do
-                url "https://github.com/cordfuse/toneai-nux-imprint/releases/download/TAG_PLACEHOLDER/toneai-nux-imprint-mac-x64"
-                sha256 "X64_PLACEHOLDER"
-              end
-            end
-
-            def install
-              bin.install Dir["toneai-nux-imprint-mac-*"].first => "toneai-nux-imprint"
-            end
-
-            test do
-              assert_match "ToneAI", shell_output("#{bin}/toneai-nux-imprint --help 2>&1 || true")
-            end
-          end
-          FORMULA
-
-          sed -i "s/VERSION_PLACEHOLDER/$VERSION/" homebrew-tools/Formula/toneai-nux-imprint.rb
-          sed -i "s/TAG_PLACEHOLDER/$TAG/g" homebrew-tools/Formula/toneai-nux-imprint.rb
-          sed -i "s/ARM64_PLACEHOLDER/$SHA256_ARM64/" homebrew-tools/Formula/toneai-nux-imprint.rb
-          sed -i "s/X64_PLACEHOLDER/$SHA256_X64/" homebrew-tools/Formula/toneai-nux-imprint.rb
-
-      - name: Commit and push
-        run: |
-          cd homebrew-tools
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Formula/toneai-nux-imprint.rb
-          git commit -m "toneai-nux-imprint: v${{ steps.version.outputs.VERSION }}"
-          git push

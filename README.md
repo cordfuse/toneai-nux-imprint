@@ -40,22 +40,16 @@ For local files and offline use. **This one needs a command line** — if that's
 
 ### Install
 
-**macOS / Linux:**
-```
-curl -fsSL https://cdn.jsdelivr.net/gh/cordfuse/toneai-nux-imprint@latest/install.sh | bash
-```
+1. **Install Node.js first** if you don't have it — [nodejs.org](https://nodejs.org) (any current LTS).
+2. Download `toneai-nux-imprint-v<version>.zip` from the [latest release](https://github.com/cordfuse/toneai-nux-imprint/releases/latest) and extract it.
+3. Open the folder in an agent CLI and say hello.
 
-**Windows (PowerShell):**
-```
-irm https://github.com/cordfuse/toneai-nux-imprint/releases/latest/download/install.ps1 | iex
-```
-
-The installer ensures Bun is available, downloads ToneAI, and prints the launch command. Requires an AI agent CLI to be installed first (see Requirements).
+No build step: the QR generator is plain JavaScript and runs on a bare Node, with no dependencies and no network calls.
 
 ### Launch
 
 ```
-cd ~/toneai
+cd toneai-nux-imprint
 claude        # or: gemini / agy / codex / opencode
 ```
 
